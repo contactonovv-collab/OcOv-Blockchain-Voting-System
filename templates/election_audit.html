@@ -1,0 +1,815 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Audit | OcOv</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f3f6fc;
+            color: #172554;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 7%;
+            background: white;
+            border-bottom: 1px solid #e5eaf3;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .main {
+            width: 92%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #172554, #2563eb);
+            color: white;
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(37,99,235,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+            right: -70px;
+            top: -100px;
+        }
+
+        .hero-label {
+            color: #bfdbfe;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            letter-spacing: -1px;
+            margin: 12px 0;
+        }
+
+        .hero h2 {
+            font-size: 22px;
+            color: #dbeafe;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            line-height: 1.7;
+            color: #dbeafe;
+            max-width: 750px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px solid #e9eef7;
+            box-shadow: 0 5px 20px rgba(15,23,42,0.04);
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: 800;
+            margin-top: 12px;
+            color: #1e40af;
+        }
+
+        .stat-sub {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e9eef7;
+            box-shadow: 0 5px 20px rgba(15,23,42,0.04);
+        }
+
+        .card-title {
+            font-size: 22px;
+            color: #172554;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 22px;
+        }
+
+        .status {
+            padding: 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            margin: 15px 0;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .status-icon {
+            font-size: 24px;
+        }
+
+        .valid {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #d1fae5;
+        }
+
+        .invalid {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .status-description {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-top: 6px;
+        }
+
+        .info {
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 20px;
+            border-radius: 14px;
+            margin-top: 18px;
+            border: 1px solid #dbeafe;
+            line-height: 1.7;
+        }
+
+        .info p {
+            color: #475569;
+            margin-top: 10px;
+            line-height: 1.7;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .summary-number {
+            font-size: 40px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .summary-caption {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .audit-point {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+            padding: 18px;
+            background: #f8fafc;
+            border: 1px solid #e5eaf3;
+            border-radius: 14px;
+        }
+
+        .audit-number {
+            min-width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .audit-point h3 {
+            color: #172554;
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .audit-point p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .audit-details {
+            border: 1px solid #dbeafe;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #f8fbff;
+        }
+
+        .audit-details summary {
+            cursor: pointer;
+            font-weight: 700;
+            color: #1d4ed8;
+            padding: 20px;
+            list-style-position: inside;
+            line-height: 1.7;
+            transition: 0.2s;
+        }
+
+        .audit-details summary:hover {
+            background: #eff6ff;
+        }
+
+        .details-content {
+            padding: 0 20px 20px;
+        }
+
+        .block {
+            padding: 22px 0;
+            border-bottom: 1px solid #dbeafe;
+        }
+
+        .block:last-child {
+            border-bottom: none;
+        }
+
+        .block-title {
+            color: #1d4ed8;
+            font-size: 19px;
+            margin-bottom: 20px;
+        }
+
+        .data-label {
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hash {
+            font-family: Consolas, Monaco, monospace;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 14px;
+            border-radius: 12px;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #334155;
+            line-height: 1.7;
+        }
+
+        .hash-current {
+            background: #eff6ff;
+            border-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .privacy-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .privacy-item {
+            background: #f8fafc;
+            border: 1px solid #e5eaf3;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .privacy-item h3 {
+            font-size: 16px;
+            color: #172554;
+            margin-bottom: 10px;
+        }
+
+        .privacy-item p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .back-button {
+            display: inline-block;
+            text-decoration: none;
+            background: white;
+            color: #1e40af;
+            border: 1px solid #dbeafe;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #eff6ff;
+            transform: translateY(-1px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        footer p {
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 750px) {
+            nav {
+                padding: 16px 5%;
+            }
+
+            .main {
+                width: 95%;
+                margin-top: 20px;
+            }
+
+            .hero {
+                padding: 25px;
+                border-radius: 18px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .privacy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .audit-point {
+                padding: 15px;
+            }
+
+            .summary-number {
+                font-size: 34px;
+            }
+
+            .nav-links {
+                gap: 5px;
+            }
+
+            .nav-links a {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='logo.png') }}"
+                 class="logo" alt="OcOv Logo">
+        </a>
+
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="main">
+
+        <!-- Audit Header -->
+        <section class="hero">
+            <div class="hero-label">Transparency & Verification</div>
+            <h1>Election Audit</h1>
+            <h2>{{ election.title }}</h2>
+
+            <p>
+                Review the recorded voting information and inspect
+                the integrity status of the hash-linked ledger
+                associated with this election.
+            </p>
+        </section>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-label">Votes Recorded</div>
+
+                <div class="stat-value">
+                    {{ total_votes }}
+                </div>
+
+                <div class="stat-sub">
+                    Ballots recorded for this election
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Election Status</div>
+
+                <div class="stat-value" style="color:#16a34a;">
+                    Declared
+                </div>
+
+                <div class="stat-sub">
+                    Official results have been declared
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Ledger Verification</div>
+
+                {% if chain_valid %}
+                    <div class="stat-value" style="color:#16a34a;">
+                        Passed
+                    </div>
+                    <div class="stat-sub">
+                        Current integrity check passed
+                    </div>
+                {% else %}
+                    <div class="stat-value" style="color:#dc2626;">
+                        Failed
+                    </div>
+                    <div class="stat-sub">
+                        Integrity verification failed
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- Overview -->
+        <section class="card">
+            <h2 class="card-title">Audit Overview</h2>
+
+            <p class="card-subtitle">
+                This audit page provides information about the
+                stored voting records, ledger integrity and
+                transparency features of OcOv.
+            </p>
+
+            <div class="status valid">
+                <div class="status-icon">✓</div>
+
+                <div>
+                    Results Officially Declared
+
+                    <div class="status-description">
+                        This election has reached its official
+                        results declaration status.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Voting Summary -->
+        <section class="card">
+            <h2 class="card-title">Voting Summary</h2>
+
+            <p class="card-subtitle">
+                The total number of ballots recorded in the
+                system for this election.
+            </p>
+
+            <div class="summary-row">
+                <div>
+                    <div class="summary-number">
+                        {{ total_votes }}
+                    </div>
+
+                    <div class="summary-caption">
+                        Total recorded votes
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Integrity -->
+        <section class="card">
+            <h2 class="card-title">Ledger Integrity Check</h2>
+
+            <p class="card-subtitle">
+                The system checks its stored hash-linked records
+                according to the current verification rules.
+            </p>
+
+            {% if chain_valid %}
+
+                <div class="status valid">
+                    <div class="status-icon">✓</div>
+
+                    <div>
+                        Integrity Check Passed
+
+                        <div class="status-description">
+                            The stored blockchain records passed
+                            the system's current integrity verification.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info">
+                    <strong>What does this mean?</strong>
+
+                    <p>
+                        The system checked the stored hash-linked
+                        records and found that they passed its
+                        current verification rules.
+                    </p>
+                </div>
+
+            {% else %}
+
+                <div class="status invalid">
+                    <div class="status-icon">!</div>
+
+                    <div>
+                        Integrity Check Failed
+
+                        <div class="status-description">
+                            The stored blockchain failed the system's
+                            current integrity verification.
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    Records may have been altered or a hash link
+                    may be invalid. The stored ledger requires
+                    further investigation.
+                </p>
+
+            {% endif %}
+        </section>
+
+        <!-- What the Audit Shows -->
+        <section class="card">
+            <h2 class="card-title">What Does This Audit Tell You?</h2>
+
+            <p class="card-subtitle">
+                Understand what the audit checks and the
+                limitations of the verification process.
+            </p>
+
+            <div class="audit-point">
+                <div class="audit-number">1</div>
+
+                <div>
+                    <h3>Recorded Votes</h3>
+
+                    <p>
+                        The system displays the number of ballots
+                        stored for this election.
+                    </p>
+                </div>
+            </div>
+
+            <div class="audit-point">
+                <div class="audit-number">2</div>
+
+                <div>
+                    <h3>Record Integrity</h3>
+
+                    <p>
+                        Blockchain verification checks the stored
+                        hash-linked records according to the
+                        system's verification rules.
+                    </p>
+                </div>
+            </div>
+
+            <div class="audit-point">
+                <div class="audit-number">3</div>
+
+                <div>
+                    <h3>Transparency</h3>
+
+                    <p>
+                        Students can review technical records
+                        associated with the election without
+                        accessing voter identities through
+                        this audit page.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info">
+                <strong>Limitations of this audit</strong>
+
+                <p>
+                    A successful integrity check alone does not prove
+                    that every vote was cast correctly, that no votes
+                    were omitted, or that the election was free from
+                    all forms of manipulation.
+                </p>
+            </div>
+        </section>
+
+        <!-- Technical Details -->
+        <section class="card">
+            <h2 class="card-title">Technical Blockchain Details</h2>
+
+            <p class="card-subtitle">
+                Technical information is hidden by default.
+                Expand the section below to inspect the
+                records associated with this election.
+            </p>
+
+            <details class="audit-details">
+
+                <summary>
+                    View technical blockchain details
+                </summary>
+
+                <div class="details-content">
+
+                    {% if election_blocks %}
+
+                        {% for block in election_blocks %}
+
+                            <div class="block">
+
+                                <h3 class="block-title">
+                                    Block #{{ block.block_index }}
+                                </h3>
+
+                                <div class="data-label">
+                                    Timestamp
+                                </div>
+
+                                <div class="hash">
+                                    {{ block.timestamp }}
+                                </div>
+
+                                <div class="data-label">
+                                    Block Data
+                                </div>
+
+                                <div class="hash">
+                                    {{ block.data }}
+                                </div>
+
+                                <div class="data-label">
+                                    Block Hash
+                                </div>
+
+                                <div class="hash hash-current">
+                                    {{ block.block_hash }}
+                                </div>
+
+                                <div class="data-label">
+                                    Previous Hash
+                                </div>
+
+                                <div class="hash">
+                                    {{ block.previous_hash }}
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p>
+                            No blockchain blocks associated
+                            with this election were found.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+            </details>
+        </section>
+
+        <!-- Privacy -->
+        <section class="card">
+            <h2 class="card-title">Privacy Protection</h2>
+
+            <p class="card-subtitle">
+                Audit transparency is designed to avoid
+                displaying individual voter identities
+                alongside their selected candidates.
+            </p>
+
+            <div class="privacy-grid">
+
+                <div class="privacy-item">
+                    <h3>Identity Protection</h3>
+
+                    <p>
+                        This audit page does not display voter
+                        identities or associate individual voters
+                        with their selected candidates.
+                    </p>
+                </div>
+
+                <div class="privacy-item">
+                    <h3>Prototype Limitation</h3>
+
+                    <p>
+                        OcOv is a local blockchain-based prototype.
+                        Its integrity checks are not an independent,
+                        distributed election verification mechanism.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <a href="{{ url_for('dashboard') }}" class="back-button">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+    <footer>
+        <p>© 2026 OcOv — One College One Vote</p>
+        <p>Blockchain-Based Voting System</p>
+    </footer>
+
+</body>
+</html>

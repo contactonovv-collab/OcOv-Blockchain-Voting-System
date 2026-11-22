@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OcOv | Voter Eligibility</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f7ff;
+            color: #1e293b;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 7%;
+            background: white;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav img {
+            width: 140px;
+            object-fit: contain;
+        }
+
+        nav div {
+            display: flex;
+            gap: 24px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            color: #1e40af;
+        }
+
+        /* Main */
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #0f172a, #1d4ed8, #60a5fa);
+            color: white;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 12px 30px rgba(37,99,235,0.15);
+        }
+
+        .hero-label {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            margin: 0 0 12px;
+            font-size: 34px;
+        }
+
+        .hero p {
+            margin: 0;
+            color: #dbeafe;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e5edff;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 23px;
+            color: #0f172a;
+        }
+
+        .section-description {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* Form */
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+
+        select {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 25px;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #f8fbff;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+            background: white;
+        }
+
+        /* Student list */
+        .student {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            margin: 12px 0;
+            background: #fbfdff;
+            transition: 0.2s;
+        }
+
+        .student:hover {
+            border-color: #bfdbfe;
+            background: #f8fbff;
+        }
+
+        .student input[type="checkbox"] {
+            width: 19px;
+            height: 19px;
+            margin: 0;
+            accent-color: #2563eb;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .student-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .student-info p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .student-name {
+            font-size: 16px;
+            color: #0f172a;
+        }
+
+        .student-email {
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .note {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* Buttons */
+        button {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            transform: translateY(-1px);
+        }
+
+        .submit-button {
+            margin-top: 20px;
+        }
+
+        /* Eligibility records */
+        .record-item {
+            border: 1px solid #e2e8f0;
+            padding: 22px;
+            border-radius: 16px;
+            margin-top: 15px;
+            background: #fbfdff;
+            transition: 0.2s;
+        }
+
+        .record-item:hover {
+            border-color: #bfdbfe;
+        }
+
+        .record-item p {
+            margin: 8px 0;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .record-name {
+            font-size: 17px;
+            color: #0f172a;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .status-voted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        /* Flash */
+        .flash-message {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            nav img {
+                width: 110px;
+            }
+
+            nav div {
+                gap: 12px;
+            }
+
+            nav a {
+                font-size: 13px;
+            }
+
+            .container {
+                margin: 25px auto;
+                padding: 0 15px;
+            }
+
+            .hero {
+                padding: 28px 22px;
+                border-radius: 18px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .card {
+                padding: 22px 18px;
+            }
+
+            .card h2 {
+                font-size: 20px;
+            }
+
+            .student {
+                padding: 15px;
+                gap: 12px;
+            }
+
+            .student-info {
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="OcOv Logo">
+    <div>
+        <a href="{{ url_for('admin') }}">Admin Panel</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+        <span class="hero-label">ELECTION ADMINISTRATION</span>
+        <h1>Voter Eligibility Management</h1>
+        <p>Assign registered students to specific elections and manage voter eligibility.</p>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- Assign Students -->
+    <div class="card">
+        <h2>Assign Eligible Students</h2>
+        <p class="section-description">
+            Select an election and choose the registered students who are eligible to participate.
+        </p>
+
+        <form method="POST" action="{{ url_for('manage_eligibility') }}">
+
+            <label>Select Election</label>
+            <select name="election_id" required>
+                <option value="">Choose an election</option>
+                {% for election in elections %}
+                    <option value="{{ election.id }}">{{ election.title }}</option>
+                {% endfor %}
+            </select>
+
+            <h3>Registered Students</h3>
+            <p class="note">
+                Select the students you want to assign to this election.
+            </p>
+
+            {% if students %}
+                {% for student in students %}
+                    <div class="student">
+
+                        <input type="checkbox"
+                               name="voter_ids"
+                               value="{{ student.id }}">
+
+                        <div class="student-info">
+                            <p class="student-name">
+                                <strong>{{ student.name }}</strong>
+                            </p>
+
+                            <p class="student-email">
+                                {{ student.email }}
+                            </p>
+
+                            <p class="note">
+                                Roll Number: {{ student.roll_number or "Not provided" }}
+                            </p>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="note">No verified student accounts found.</p>
+            {% endif %}
+
+            <button type="submit" class="submit-button">
+                Assign Selected Students
+            </button>
+
+        </form>
+    </div>
+
+    <!-- Eligibility Records -->
+    <div class="card">
+        <h2>Eligibility Records</h2>
+        <p class="section-description">
+            Review assigned students and their voting status for each election.
+        </p>
+
+        {% if eligibility %}
+            {% for record in eligibility %}
+                <div class="record-item">
+
+                    <p class="record-name">
+                        <strong>{{ record.name }}</strong>
+                    </p>
+
+                    <p>{{ record.email }}</p>
+
+                    <p>
+                        <strong>Election:</strong>
+                        {{ record.election_title }}
+                    </p>
+
+                    <p class="note">
+                        Roll Number: {{ record.roll_number or "Not provided" }}
+                    </p>
+
+                    <p>
+                        <strong>Voting Status:</strong>
+                    </p>
+
+                    {% if record.has_voted %}
+                        <span class="status status-voted">Already voted</span>
+                    {% else %}
+                        <span class="status status-pending">Not yet voted</span>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="note">No eligibility records have been created yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<footer>
+    OcOv — One College One Vote
+</footer>
+
+</body>
+</html>

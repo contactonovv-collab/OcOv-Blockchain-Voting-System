@@ -1,0 +1,1032 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Results - OcOv</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fc;
+            color: #172554;
+        }
+
+        .navbar {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5eaf3;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1d4ed8;
+            letter-spacing: -1px;
+        }
+
+        .brand span {
+            color: #172554;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .flash-message {
+            background: #ecfdf5;
+            color: #047857;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #d1fae5;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #172554, #2563eb);
+            color: white;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.15);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            right: -80px;
+            top: -100px;
+        }
+
+        .hero-label {
+            color: #bfdbfe;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            margin: 12px 0;
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+
+        .hero h2 {
+            font-size: 22px;
+            margin: 0 0 12px;
+            color: #dbeafe;
+            font-weight: 600;
+        }
+
+        .hero p {
+            color: #dbeafe;
+            line-height: 1.7;
+            max-width: 750px;
+            margin-bottom: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+            border: 1px solid #e9eef7;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            margin-top: 12px;
+            color: #1e40af;
+        }
+
+        .stat-sub {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+            border: 1px solid #e9eef7;
+            margin-bottom: 25px;
+        }
+
+        .panel-title {
+            font-size: 22px;
+            margin: 0 0 8px;
+            color: #172554;
+        }
+
+        .panel-subtitle {
+            color: #64748b;
+            margin: 0 0 22px;
+            font-size: 14px;
+        }
+
+        .outcome {
+            border: 1px solid #dbeafe;
+            background: linear-gradient(135deg, #eff6ff, #ffffff);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .outcome-label {
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+        }
+
+        .winner-name {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1d4ed8;
+            margin: 10px 0;
+        }
+
+        .winner-party {
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+
+        .winner-votes {
+            font-size: 20px;
+            font-weight: 700;
+            color: #172554;
+        }
+
+        .tie-candidate {
+            background: white;
+            border: 1px solid #dbeafe;
+            padding: 15px 18px;
+            border-radius: 12px;
+            margin-top: 12px;
+            font-weight: 700;
+            color: #1e40af;
+        }
+
+        .empty-outcome {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .status-declared {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .declare-button {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .declare-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .candidate-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .candidate-card {
+            border: 1px solid #e5eaf3;
+            border-radius: 16px;
+            padding: 22px;
+            transition: 0.2s;
+        }
+
+        .candidate-card:hover {
+            border-color: #bfdbfe;
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.05);
+        }
+
+        .candidate-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .candidate-name {
+            font-size: 19px;
+            font-weight: 700;
+            color: #172554;
+            margin: 0;
+        }
+
+        .candidate-party {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .candidate-votes {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .vote-number {
+            color: #2563eb;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .vote-caption {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .progress-track {
+            height: 10px;
+            background: #e9eef7;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 22px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .percentage-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .percentage {
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .back-button {
+            display: inline-block;
+            text-decoration: none;
+            background: white;
+            color: #1e40af;
+            border: 1px solid #dbeafe;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #eff6ff;
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            padding: 20px 0;
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 16px 5%;
+            }
+
+            .container {
+                margin-top: 20px;
+                padding: 0 14px;
+            }
+
+            .hero {
+                padding: 25px;
+                border-radius: 18px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .outcome {
+                padding: 22px;
+            }
+
+            .winner-name {
+                font-size: 26px;
+            }
+
+            .candidate-card {
+                padding: 18px;
+            }
+
+            .candidate-top {
+                flex-direction: column;
+            }
+
+            .candidate-votes {
+                text-align: left;
+            }
+
+            .footer-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .back-button {
+                text-align: center;
+            }
+        }
+        .analytics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 25px;
+}
+
+.chart-panel {
+    background: white;
+    border: 1px solid #e9eef7;
+    border-radius: 20px;
+    padding: 25px;
+    min-width: 0;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+}
+
+@media (max-width: 750px) {
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-container {
+        height: 280px;
+    }
+}
+
+/* Turnout Analytics */
+
+.turnout-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.turnout-card {
+    background: white;
+    border: 1px solid #e9eef7;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+}
+
+.turnout-card h3 {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0 0 12px;
+}
+
+.turnout-card .metric {
+    font-size: 30px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.turnout-card .metric-note {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 8px;
+}
+
+.turnout-panel {
+    background: white;
+    border: 1px solid #e9eef7;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+}
+
+.turnout-chart-container {
+    position: relative;
+    height: 300px;
+    max-width: 500px;
+    margin: auto;
+}
+
+@media (max-width: 900px) {
+    .turnout-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    .turnout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Winner Margin Analytics */
+
+.margin-panel {
+    background: white;
+    border: 1px solid #e9eef7;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+}
+
+.margin-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.margin-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 22px;
+    border-radius: 16px;
+}
+
+.margin-card h3 {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0 0 12px;
+}
+
+.margin-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1d4ed8;
+}
+
+.margin-note {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 8px;
+}
+
+@media (max-width: 750px) {
+    .margin-grid {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="{{ url_for('login') }}" style="display:flex;align-items:center;text-decoration:none;">
+    <img src="{{ url_for('static', filename='logo.png') }}"
+         alt="OcOv Logo"
+         style="height:45px;width:auto;object-fit:contain;">
+</a>
+    <a class="nav-link" href="{{ url_for('admin') }}">Admin Dashboard</a>
+</nav>
+
+<div class="container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Election Header -->
+    <section class="hero">
+        <div class="hero-label">Election Report</div>
+        <h1>Election Results</h1>
+        <h2>{{ election.title }}</h2>
+        <p>{{ election.description or "No description provided." }}</p>
+    </section>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-label">Total Votes Cast</div>
+            <div class="stat-value">{{ total_votes }}</div>
+            <div class="stat-sub">Recorded ballots</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Candidates</div>
+            <div class="stat-value">{{ results|length }}</div>
+            <div class="stat-sub">Participating candidates</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Result Status</div>
+
+            {% if election.results_declared %}
+                <div class="stat-value" style="color:#16a34a;">Declared</div>
+                <div class="stat-sub">Official result published</div>
+            {% else %}
+                <div class="stat-value" style="color:#d97706;">Pending</div>
+                <div class="stat-sub">Awaiting official declaration</div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Election Outcome -->
+    <section class="panel">
+        <h2 class="panel-title">Election Outcome</h2>
+        <p class="panel-subtitle">The candidate or candidates with the highest vote count.</p>
+
+        <div class="outcome">
+
+            <div class="outcome-label">Outcome Summary</div>
+
+            {% if total_votes == 0 %}
+                <p class="empty-outcome">
+                    No votes were cast. No winner has been declared.
+                </p>
+
+            {% elif is_tie %}
+                <h2 style="color:#1d4ed8;">Tie</h2>
+                <p>The following candidates received the highest equal vote count:</p>
+
+                {% for candidate in winner_candidates %}
+                    <div class="tie-candidate">
+                        {{ candidate.name }} — {{ candidate.vote_count }} vote(s)
+                    </div>
+                {% endfor %}
+
+            {% elif winner %}
+                <div style="font-size:14px;color:#64748b;">Winner</div>
+                <div class="winner-name">{{ winner.name }}</div>
+
+                {% if winner.party %}
+                    <div class="winner-party">{{ winner.party }}</div>
+                {% endif %}
+
+                <div class="winner-votes">
+                    {{ winner.vote_count }} vote(s)
+                </div>
+
+            {% else %}
+                <p class="empty-outcome">No winner has been declared.</p>
+            {% endif %}
+
+        </div>
+
+        <!-- Declaration Status -->
+        {% if election.results_declared %}
+
+            <div class="status status-declared">
+                ✓ Results Officially Declared
+            </div>
+
+        {% elif total_votes > 0 %}
+
+            <div class="status status-pending">
+                Results Not Officially Declared
+            </div>
+
+            <form method="POST"
+                  action="{{ url_for('declare_results', election_id=election.id) }}"
+                  onsubmit="return confirm('Are you sure you want to officially declare these election results? This action cannot be undone.');">
+
+                <button type="submit" class="declare-button">
+                    Declare Results
+                </button>
+            </form>
+
+        {% else %}
+
+            <div class="status status-pending">
+                Results cannot be declared without votes.
+            </div>
+
+        {% endif %}
+    </section>
+<!-- ELECTION ANALYTICS -->
+
+<div class="analytics-grid">
+
+    <!-- Bar Chart -->
+    <section class="chart-panel">
+        <h2 class="panel-title">Candidate Vote Comparison</h2>
+        <p class="panel-subtitle">
+            Total votes received by each candidate.
+        </p>
+
+        <div class="chart-container">
+            <canvas id="voteBarChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Doughnut Chart -->
+    <section class="chart-panel">
+        <h2 class="panel-title">Vote Share Distribution</h2>
+        <p class="panel-subtitle">
+            Percentage distribution of votes.
+        </p>
+
+        <div class="chart-container">
+            <canvas id="voteDoughnutChart"></canvas>
+        </div>
+    </section>
+
+</div>
+<!-- Voter Turnout Analytics -->
+
+<div class="turnout-grid">
+
+    <div class="turnout-card">
+        <h3>Eligible Voters</h3>
+        <div class="metric">{{ eligible_voters }}</div>
+        <div class="metric-note">Students assigned to this election</div>
+    </div>
+
+    <div class="turnout-card">
+        <h3>Votes Cast</h3>
+        <div class="metric">{{ votes_cast }}</div>
+        <div class="metric-note">Eligible students who voted</div>
+    </div>
+
+    <div class="turnout-card">
+        <h3>Did Not Vote</h3>
+        <div class="metric">{{ non_voters }}</div>
+        <div class="metric-note">Eligible students yet to vote</div>
+    </div>
+
+    <div class="turnout-card">
+        <h3>Voter Turnout</h3>
+        <div class="metric">{{ "%.1f"|format(turnout_percentage) }}%</div>
+        <div class="metric-note">Participation among eligible students</div>
+    </div>
+
+</div>
+
+<div class="turnout-panel">
+    <h2 class="panel-title">Voter Participation Analysis</h2>
+    <p class="panel-subtitle">
+        Comparison between students who voted and those who did not.
+    </p>
+
+    <div class="turnout-chart-container">
+        <canvas id="turnoutChart"></canvas>
+    </div>
+</div>
+
+<!-- Winner Margin Analysis -->
+
+<div class="margin-panel">
+    <h2 class="panel-title">Winner Margin Analysis</h2>
+    <p class="panel-subtitle">
+        Analysis of the winning candidate's lead over the runner-up.
+    </p>
+
+    <div class="margin-grid">
+
+        <div class="margin-card">
+            <h3>Winning Margin</h3>
+            <div class="margin-value">{{ winner_margin }} votes</div>
+            <div class="margin-note">Difference between the top two candidates</div>
+        </div>
+
+        <div class="margin-card">
+            <h3>Margin Percentage</h3>
+            <div class="margin-value">
+                {{ "%.1f"|format(winner_margin_percentage) }}%
+            </div>
+            <div class="margin-note">Margin relative to total ballots</div>
+        </div>
+
+        <div class="margin-card">
+            <h3>Competition Level</h3>
+            <div class="margin-value">{{ competition_level }}</div>
+            <div class="margin-note">Based on the winning margin</div>
+        </div>
+
+    </div>
+</div>
+    <!-- Candidate Results -->
+    <section class="panel">
+        <h2 class="panel-title">Candidate Results</h2>
+        <p class="panel-subtitle">Vote distribution among all candidates.</p>
+
+        {% if results %}
+
+            <div class="candidate-list">
+
+                {% for candidate in results %}
+
+                    <div class="candidate-card">
+
+                        <div class="candidate-top">
+
+                            <div>
+                                <h3 class="candidate-name">
+                                    {{ candidate.name }}
+                                </h3>
+
+                                {% if candidate.party %}
+                                    <div class="candidate-party">
+                                        {{ candidate.party }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="candidate-votes">
+                                <div class="vote-number">
+                                    {{ candidate.vote_count }}
+                                </div>
+                                <div class="vote-caption">vote(s)</div>
+                            </div>
+
+                        </div>
+
+                        <div class="progress-track">
+                            <div class="progress-fill"
+                                 style="width: {{ (candidate.vote_count / total_votes * 100) if total_votes > 0 else 0 }}%;">
+                            </div>
+                        </div>
+
+                        <div class="percentage-row">
+                            <span>Vote share</span>
+                            <span class="percentage">
+                                {{ "%.1f"|format((candidate.vote_count / total_votes * 100) if total_votes > 0 else 0) }}%
+                            </span>
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="empty-outcome">
+                No candidates have been added to this election.
+            </p>
+
+        {% endif %}
+    </section>
+
+   <!-- Footer Actions -->
+<div class="footer-actions">
+
+    <a href="{{ url_for('admin') }}" class="back-button">
+        ← Back to Admin Dashboard
+    </a>
+
+    <a href="{{ url_for('export_election_results', election_id=election.id) }}"
+       class="back-button">
+        ↓ Download Election Report (CSV)
+    </a>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const candidateNames = {{ results | map(attribute='name') | list | tojson }};
+    const voteCounts = {{ results | map(attribute='vote_count') | list | tojson }};
+
+    const totalVotes = {{ total_votes | tojson }};
+
+    const voteShares = voteCounts.map(count =>
+        totalVotes > 0 ? (count / totalVotes) * 100 : 0
+    );
+
+    const chartColors = [
+        '#2563eb',
+        '#60a5fa',
+        '#0f172a',
+        '#38bdf8',
+        '#818cf8',
+        '#14b8a6',
+        '#64748b',
+        '#f59e0b'
+    ];
+
+    // Candidate comparison chart
+    const barCanvas = document.getElementById('voteBarChart');
+
+    if (barCanvas && candidateNames.length > 0) {
+        new Chart(barCanvas, {
+            type: 'bar',
+            data: {
+                labels: candidateNames,
+                datasets: [{
+                    label: 'Votes',
+                    data: voteCounts,
+                    backgroundColor: chartColors,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Vote share chart
+    const doughnutCanvas = document.getElementById('voteDoughnutChart');
+
+    if (doughnutCanvas && candidateNames.length > 0) {
+        new Chart(doughnutCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: candidateNames,
+                datasets: [{
+                    data: voteShares,
+                    backgroundColor: chartColors,
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' +
+                                    context.parsed.toFixed(1) + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    // Voter turnout chart
+
+const turnoutCanvas = document.getElementById('turnoutChart');
+
+if (turnoutCanvas) {
+    new Chart(turnoutCanvas, {
+        type: 'doughnut',
+        data: {
+            labels: ['Voted', 'Did Not Vote'],
+            datasets: [{
+                data: [{{ votes_cast }}, {{ non_voters }}],
+                backgroundColor: ['#2563eb', '#e2e8f0'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.parsed;
+                            const total = {{ eligible_voters }};
+
+                            const percentage = total > 0
+                                ? (value / total) * 100
+                                : 0;
+
+                            return context.label + ': ' +
+                                value + ' (' +
+                                percentage.toFixed(1) + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>

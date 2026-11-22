@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | OcOv</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #174ea6;
+            --navy: #0f172a;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f5f8ff;
+            --border: #e5eaf5;
+            --white: #ffffff;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 7%;
+            background: rgba(255,255,255,0.95);
+            border-bottom: 1px solid #e8edf5;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            width: 135px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .logout {
+            background: var(--primary);
+            color: white !important;
+            padding: 11px 20px;
+            border-radius: 10px;
+            transition: 0.25s;
+        }
+
+        .logout:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* FLASH MESSAGES */
+
+        .flash-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto 0;
+        }
+
+        .flash-message {
+            padding: 15px 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #bbf7d0;
+            background: #ecfdf5;
+            color: #166534;
+        }
+
+        /* MAIN */
+
+        .main {
+            width: 90%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        /* HERO */
+
+        .welcome {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(120deg, #102a63, #2563eb 65%, #60a5fa);
+            color: white;
+            padding: 48px;
+            border-radius: 25px;
+            margin-bottom: 35px;
+            box-shadow: 0 15px 40px rgba(37,99,235,0.17);
+        }
+
+        .welcome::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50%;
+            top: -140px;
+            right: -60px;
+        }
+
+        .welcome::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 50%;
+            bottom: -130px;
+            right: 150px;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            max-width: 650px;
+        }
+
+        .welcome-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 13px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 22px;
+        }
+
+        .welcome h1 {
+            font-size: clamp(28px, 4vw, 42px);
+            letter-spacing: -1px;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .welcome h1 span {
+            color: #bfdbfe;
+        }
+
+        .welcome p {
+            line-height: 1.8;
+            color: #e0edff;
+            font-size: 15px;
+            max-width: 570px;
+        }
+
+        .welcome-bottom {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        .welcome-stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #eaf2ff;
+            font-size: 13px;
+        }
+
+        .welcome-stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.14);
+            display: grid;
+            place-items: center;
+            font-size: 17px;
+        }
+
+        /* SECTION HEADINGS */
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 750;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 7px;
+            line-height: 1.6;
+        }
+
+        .section-label {
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        /* CATEGORY CARDS */
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 42px;
+        }
+
+        .category-card {
+    background: white;
+    padding: 0;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+        .category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(15,23,42,0.10);
+}
+.category-image {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s;
+}
+
+.category-card:hover .category-image {
+    transform: scale(1.03);
+}
+
+.category-card-content {
+    padding: 24px;
+}
+
+        .category-icon {
+            width: 53px;
+            height: 53px;
+            display: grid;
+            place-items: center;
+            font-size: 25px;
+            background: #eff6ff;
+            border-radius: 15px;
+            margin-bottom: 18px;
+        }
+
+        .category-card h3 {
+            font-size: 17px;
+            color: var(--navy);
+            margin-bottom: 10px;
+        }
+
+        .category-card p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
+            min-height: 65px;
+        }
+
+        .coming-soon {
+            display: inline-block;
+            margin-top: 17px;
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 7px 11px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+        }
+
+        /* ELECTION CARDS */
+
+        .elections {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .election-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 26px;
+            transition: transform 0.25s, box-shadow 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+        .election-thumbnail {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            border-radius: 16px;
+            margin-bottom: 18px;
+        }
+
+        .election-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(15,23,42,0.06);
+        }
+
+        .election-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .election-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            display: grid;
+            place-items: center;
+            font-size: 25px;
+            flex-shrink: 0;
+        }
+
+        .election-card h3 {
+            font-size: 20px;
+            color: var(--navy);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .election-card > p {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.75;
+            margin-bottom: 18px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-open {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-upcoming {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-voted {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-closed {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+
+        /* BUTTONS */
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 11px;
+            padding: 13px 19px;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(37,99,235,0.2);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-outline:hover {
+            background: #eff6ff;
+        }
+
+        /* RESULTS */
+
+        .winner-box {
+            margin-top: 22px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fbff, #eff6ff);
+            border: 1px solid #dbeafe;
+            border-radius: 15px;
+        }
+
+        .winner-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .winner-header-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: #dbeafe;
+            font-size: 19px;
+        }
+
+        .winner-box h4 {
+            color: #174ea6;
+            font-size: 16px;
+        }
+
+        .winner-box p {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+
+        .winner-name {
+            color: #1e40af;
+            font-weight: 800;
+        }
+
+        .winner-candidate {
+            background: white;
+            border: 1px solid #e0eaf9;
+            padding: 12px 14px;
+            border-radius: 11px;
+            margin-top: 10px;
+        }
+
+        .winner-candidate p {
+            margin-bottom: 3px;
+        }
+
+        .audit-button {
+            margin-top: 18px;
+        }
+
+        /* EMPTY STATE */
+
+        .empty-state {
+            grid-column: 1 / -1;
+            background: white;
+            padding: 40px 25px;
+            text-align: center;
+            border: 1px dashed #cbd5e1;
+            border-radius: 20px;
+        }
+
+        .empty-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 20px;
+            background: #eff6ff;
+            display: grid;
+            place-items: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+        }
+
+        .empty-state h3 {
+            color: var(--navy);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        /* INFO PANEL */
+
+        .info-section {
+            margin-top: 40px;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            color: white;
+            padding: 30px;
+            border-radius: 22px;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-icon {
+            width: 65px;
+            height: 65px;
+            flex-shrink: 0;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.12);
+            display: grid;
+            place-items: center;
+            font-size: 30px;
+        }
+
+        .info-section h2 {
+            font-size: 21px;
+            margin-bottom: 12px;
+        }
+
+        .info-section p {
+            color: #cbd5e1;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 45px;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        footer strong {
+            color: #334155;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .welcome {
+                padding: 35px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            nav {
+                padding: 14px 5%;
+            }
+
+            .logo {
+                width: 110px;
+            }
+
+            .nav-links {
+                gap: 14px;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+            }
+
+            .main {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .welcome {
+                padding: 27px 23px;
+                border-radius: 20px;
+            }
+
+            .welcome h1 {
+                font-size: 29px;
+            }
+
+            .welcome p {
+                font-size: 14px;
+            }
+
+            .welcome-bottom {
+                gap: 12px;
+            }
+
+            .section-title {
+                font-size: 21px;
+            }
+
+            .categories {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .category-card-content {
+    padding: 22px;
+}
+
+            .category-card p {
+                min-height: auto;
+            }
+
+            .elections {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .election-card {
+                padding: 22px;
+            }
+
+            .info-section {
+                padding: 25px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .flash-container {
+                width: 94%;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .nav-links {
+                gap: 10px;
+            }
+
+            .logout {
+                padding: 9px 13px;
+            }
+
+            .welcome h1 {
+                font-size: 25px;
+            }
+        }
+
+        /* LIVE ELECTION ANNOUNCEMENT */
+
+.live-announcement-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.live-announcement-overlay.active {
+    display: flex;
+}
+
+.live-announcement-modal {
+    background: white;
+    width: 100%;
+    max-width: 620px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+    animation: announcementDrop 0.4s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes announcementDrop {
+    from {
+        opacity: 0;
+        transform: translateY(-45px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.live-announcement-image {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    display: block;
+}
+
+.live-announcement-content {
+    padding: 28px;
+}
+
+.live-announcement-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 8px 13px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.live-announcement-title {
+    color: #0f172a;
+    font-size: 26px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.live-announcement-description {
+    color: #64748b;
+    line-height: 1.8;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.live-announcement-dates {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 22px;
+}
+
+.live-announcement-dates p {
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.live-announcement-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.live-announcement-actions a,
+.live-announcement-actions button {
+    flex: 1;
+    min-width: 140px;
+}
+
+.live-announcement-close {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 13px 19px;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.live-announcement-close:hover {
+    background: #e2e8f0;
+}
+
+@media (max-width: 600px) {
+    .live-announcement-image {
+        height: 190px;
+    }
+
+    .live-announcement-content {
+        padding: 22px;
+    }
+
+    .live-announcement-title {
+        font-size: 22px;
+    }
+
+    .live-announcement-actions {
+        flex-direction: column;
+    }
+}
+
+
+    </style>
+</head>
+
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<nav>
+    <a href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}"
+             class="logo" alt="OcOv Logo">
+    </a>
+
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
+</nav>
+
+<div class="main">
+
+    <!-- WELCOME HERO -->
+
+    <section class="welcome">
+        <div class="welcome-content">
+
+            <div class="welcome-tag">
+                <span>🗳️</span>
+                STUDENT VOTING PORTAL
+            </div>
+
+            <h1>Welcome, <span>{{ session.get('user_name', 'Student') }}</span></h1>
+
+            <p>
+                Your voice matters. Participate in college elections,
+                choose your representatives, and help shape the future
+                of your college through OcOv.
+            </p>
+
+            <div class="welcome-bottom">
+                <div class="welcome-stat">
+                    <div class="welcome-stat-icon">🔐</div>
+                    <span>Secure voting access</span>
+                </div>
+
+                <div class="welcome-stat">
+                    <div class="welcome-stat-icon">⛓️</div>
+                    <span>Blockchain-recorded votes</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CATEGORIES -->
+
+ 
+<div class="section-heading">
+    <div>
+        <div class="section-label">Explore</div>
+        <h2 class="section-title">Election Categories</h2>
+        <p class="section-subtitle">
+            Discover the different student leadership positions.
+        </p>
+    </div>
+</div>
+
+<div class="categories">
+
+    {% for category in categories %}
+
+    <a href="{{ url_for('view_category', category_id=category.id) }}"
+   class="category-card"
+   style="text-decoration:none;color:inherit;display:block;">
+
+        {% if category.image %}
+            <img class="category-image"
+                 src="{{ url_for('static', filename='uploads/categories/' + category.image) }}"
+                 alt="{{ category.name }}">
+        {% else %}
+            <div class="category-image"
+                 style="display:flex;align-items:center;justify-content:center;background:#e8eef7;color:#64748b;">
+                No Image
+            </div>
+        {% endif %}
+
+        <div class="category-card-content">
+
+            <div class="category-icon">🗳️</div>
+
+            <h3>{{ category.name }}</h3>
+
+            <p>
+                {{ category.description or "Explore elections in this category." }}
+            </p>
+
+            <span class="coming-soon">EXPLORE</span>
+
+        </div>
+    </a>
+
+    {% endfor %}
+
+</div>
+
+    <!-- ELIGIBLE ELECTIONS -->
+
+    <div class="section-heading">
+        <div>
+            <div class="section-label">Your participation</div>
+            <h2 class="section-title">Your Eligible Elections</h2>
+            <p class="section-subtitle">
+                Elections assigned to you by the administrator.
+            </p>
+        </div>
+    </div>
+
+    <div class="elections">
+
+        {% if elections %}
+
+            {% for election in elections %}
+
+                <div class="election-card">
+
+                    {% if election.thumbnail %}
+    <img class="election-thumbnail"
+         src="{{ url_for('static', filename='uploads/elections/' ~ election.thumbnail) }}"
+         alt="{{ election.title }} thumbnail">
+{% endif %}
+
+<div class="election-top">
+    <div class="election-icon">🗳️</div>
+
+                        {% if election.has_voted %}
+                            <span class="status status-voted">
+                                <span class="status-dot"></span>
+                                Vote Submitted
+                            </span>
+
+                        {% elif election.is_open %}
+                            <span class="status status-open">
+                                <span class="status-dot"></span>
+                                Election Open
+                            </span>
+
+                        {% elif election.is_upcoming %}
+                            <span class="status status-upcoming">
+                                <span class="status-dot"></span>
+                                Upcoming
+                            </span>
+
+                        {% else %}
+                            <span class="status status-closed">
+                                <span class="status-dot"></span>
+                                Closed
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <h3>{{ election.title }}</h3>
+
+                    <p>
+                        {{ election.description or "Participate in this college election." }}
+                    </p>
+<div class="election-dates" style="margin: 15px 0; padding: 14px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+
+    {% if election.start_time %}
+        <p style="margin-bottom: 8px;">
+            <strong>📅 Starts:</strong> {{ election.start_time | datetime_format }}
+        </p>
+    {% else %}
+        <p style="margin-bottom: 8px;">
+            <strong>📅 Starts:</strong> Not scheduled
+        </p>
+    {% endif %}
+
+    {% if election.end_time %}
+        <p style="margin: 0;">
+            <strong>⏰ Ends:</strong> {{ election.end_time | datetime_format }}
+        </p>
+    {% else %}
+        <p style="margin: 0;">
+            <strong>⏰ Ends:</strong> Not scheduled
+        </p>
+    {% endif %}
+
+</div>
+                    {% if election.has_voted %}
+
+                        <span class="status status-voted">
+                            ✓ Your vote has been recorded
+                        </span>
+
+                    {% elif election.is_open %}
+
+                        <a href="{{ url_for('vote', election_id=election.id) }}"
+                           class="btn btn-primary">
+                            Vote Now →
+                        </a>
+
+                    {% elif election.is_upcoming %}
+
+                        <span class="status status-upcoming">
+                            Voting has not started yet
+                        </span>
+
+                    {% else %}
+
+                        <span class="status status-closed">
+                            Voting period ended
+                        </span>
+
+                    {% endif %}
+
+                    {% if election.is_closed %}
+
+                        <div class="winner-box">
+
+                            <div class="winner-header">
+                                <div class="winner-header-icon">🏆</div>
+                                <h4>Election Outcome</h4>
+                            </div>
+
+                            {% if election.results_pending %}
+
+                                <p>
+                                    Results are pending official
+                                    declaration by the administrator.
+                                </p>
+
+                            {% elif election.total_votes == 0 %}
+
+                                <p>
+                                    No votes were recorded in this election.
+                                </p>
+
+                            {% elif election.is_tie %}
+
+                                <p><strong>Result: Tie</strong></p>
+
+                                <p>
+                                    The following candidates received
+                                    the highest votes:
+                                </p>
+
+                                {% for candidate in election.winner_candidates %}
+
+                                    <div class="winner-candidate">
+                                        <p>
+                                            <span class="winner-name">
+                                                {{ candidate.name }}
+                                            </span>
+
+                                            {% if candidate.party %}
+                                                — {{ candidate.party }}
+                                            {% endif %}
+                                        </p>
+
+                                        <p>
+                                            {{ candidate.vote_count }} votes
+                                        </p>
+                                    </div>
+
+                                {% endfor %}
+
+                            {% elif election.winner %}
+
+                                <p><strong>Winner:</strong></p>
+
+                                <div class="winner-candidate">
+                                    <p>
+                                        <span class="winner-name">
+                                            {{ election.winner.name }}
+                                        </span>
+
+                                        {% if election.winner.party %}
+                                            — {{ election.winner.party }}
+                                        {% endif %}
+                                    </p>
+
+                                    <p>
+                                        Votes received:
+                                        <strong>
+                                            {{ election.winner.vote_count }}
+                                        </strong>
+                                    </p>
+                                </div>
+
+                                <p style="margin-top: 12px;">
+                                    Total votes in election:
+                                    <strong>{{ election.total_votes }}</strong>
+                                </p>
+
+                            {% else %}
+
+                                <p>
+                                    Winner information is unavailable.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if election.is_closed and not election.results_pending %}
+
+                        <a href="{{ url_for('election_audit', election_id=election.id) }}"
+                           class="btn btn-outline audit-button">
+                            🔍 View Election Audit
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">📭</div>
+
+                <h3>No Elections Available</h3>
+
+                <p>
+                    No elections have been assigned to your account yet.
+                    When you become eligible, elections will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- INFORMATION PANEL -->
+
+    <section class="info-section">
+
+        <div class="info-icon">🔐</div>
+
+        <div>
+            <h2>Your Voting Portal</h2>
+
+            <p>
+                Elections appear here when they are published and you are
+                eligible to participate. Your voting participation is
+                recorded for each election, and blockchain-style records
+                are available for election audit and integrity verification.
+            </p>
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    <p><strong>© 2026 OcOv — One College One Vote</strong></p>
+    <p>Blockchain-Based Voting System</p>
+</footer>
+{% set live_announcement = namespace(election=None) %}
+
+{% for election in elections %}
+    {% if election.is_open and not election.has_voted and live_announcement.election is none %}
+        {% set live_announcement.election = election %}
+    {% endif %}
+{% endfor %}
+
+{% if live_announcement.election %}
+
+<div class="live-announcement-overlay" id="liveAnnouncementOverlay">
+
+    <div class="live-announcement-modal">
+
+        {% if live_announcement.election.thumbnail %}
+            <img
+                src="{{ url_for('static', filename='uploads/elections/' ~ live_announcement.election.thumbnail) }}"
+                alt="Election poster"
+                class="live-announcement-image">
+        {% endif %}
+
+        <div class="live-announcement-content">
+
+            <div class="live-announcement-badge">
+                <span>●</span> LIVE ELECTION
+            </div>
+
+            <h2 class="live-announcement-title">
+                {{ live_announcement.election.title }}
+            </h2>
+
+            <p class="live-announcement-description">
+                {{ live_announcement.election.description or
+                "An election is currently live. Cast your vote and participate." }}
+            </p>
+
+            <div class="live-announcement-dates">
+
+                <p>
+                    <strong>Voting started:</strong>
+                    {{ live_announcement.election.start_time }}
+                </p>
+
+                <p>
+                    <strong>Voting ends:</strong>
+                    {{ live_announcement.election.end_time }}
+                </p>
+
+            </div>
+
+            <div class="live-announcement-actions">
+
+                <a href="{{ url_for('vote', election_id=live_announcement.election.id) }}"
+                   class="btn btn-primary">
+                    Vote Now →
+                </a>
+
+                <button type="button"
+                        class="live-announcement-close"
+                        onclick="dismissLiveAnnouncement()">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+(function () {
+
+    const electionId = "{{ live_announcement.election.id }}";
+    const storageKey = "ocov_live_announcement_" + electionId;
+
+    const overlay = document.getElementById("liveAnnouncementOverlay");
+
+    if (!overlay) return;
+
+    try {
+        if (!localStorage.getItem(storageKey)) {
+            overlay.classList.add("active");
+        }
+    } catch (error) {
+        overlay.classList.add("active");
+    }
+
+    window.dismissLiveAnnouncement = function () {
+
+        try {
+            localStorage.setItem(storageKey, "dismissed");
+        } catch (error) {
+            // If storage is unavailable, close the popup for this page visit.
+        }
+
+        overlay.classList.remove("active");
+    };
+
+})();
+</script>
+
+{% endif %}
+</body>
+</html>

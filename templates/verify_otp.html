@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email | OcOv</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:
+                radial-gradient(circle at top left, #dbeafe, transparent 45%),
+                linear-gradient(135deg, #f4f7ff, #eef4ff);
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            width: 100%;
+            max-width: 460px;
+            padding: 40px;
+            border-radius: 22px;
+            box-shadow: 0 25px 70px rgba(23, 70, 162, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            text-align: center;
+        }
+
+        .logo {
+            width: 145px;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 25px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #eaf1ff;
+            color: #1746a2;
+            padding: 7px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #172033;
+            margin-bottom: 12px;
+            font-size: 29px;
+        }
+
+        .subtitle {
+            color: #667085;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            margin: 10px 0 20px;
+            border: 1px solid #d0d5dd;
+            border-radius: 12px;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 8px;
+            color: #172033;
+            outline: none;
+            background: #fff;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1746a2, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(23, 70, 162, 0.2);
+        }
+
+        .messages {
+            margin-bottom: 18px;
+        }
+
+        .messages p {
+            background: #eaf1ff;
+            color: #1746a2;
+            border: 1px solid #d5e3ff;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .resend {
+            margin-top: 18px;
+        }
+
+        .resend button {
+            background: #f0f5ff;
+            color: #1746a2;
+            border: 1px solid #d5e3ff;
+            box-shadow: none;
+        }
+
+        .resend button:hover {
+            background: #e0ecff;
+            transform: none;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eaecf0;
+            margin: 25px 0 20px;
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-top: 22px;
+            text-decoration: none;
+            color: #1746a2;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            color: #98a2b3;
+            font-size: 12px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 22px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            input {
+                font-size: 21px;
+                letter-spacing: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <img src="{{ url_for('static', filename='logo.png') }}"
+             class="logo" alt="OcOv Logo">
+
+        <div>
+            <span class="tag">ACCOUNT SECURITY</span>
+        </div>
+
+        <h1>Email Verification</h1>
+
+        <p class="subtitle">
+            Enter the 6-digit verification code sent to your email
+            to complete your OcOv registration.
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="otp"
+                placeholder="000000"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                required
+            >
+
+            <button type="submit">Verify & Create Account</button>
+
+        </form>
+
+        <form method="POST"
+              action="{{ url_for('resend_otp') }}"
+              class="resend">
+
+            <button type="submit">Resend Verification Code</button>
+
+        </form>
+
+        <div class="divider"></div>
+
+        <a href="{{ url_for('home') }}" class="home-link">
+            ← Back to Home
+        </a>
+
+        <div class="footer">
+            OcOv · One College One Vote
+        </div>
+
+    </div>
+
+</body>
+</html>

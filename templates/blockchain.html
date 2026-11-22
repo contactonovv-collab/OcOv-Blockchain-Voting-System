@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OcOv Blockchain Ledger</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fc;
+            color: #172554;
+        }
+
+        .navbar {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5eaf3;
+        }
+
+        .logo img {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #172554, #2563eb);
+            color: white;
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+            right: -70px;
+            top: -100px;
+        }
+
+        .hero-label {
+            color: #bfdbfe;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            margin: 12px 0;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            color: #dbeafe;
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e9eef7;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(15,23,42,0.04);
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            color: #1e40af;
+            font-size: 32px;
+            font-weight: 800;
+            margin-top: 12px;
+        }
+
+        .stat-sub {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 25px;
+            border: 1px solid #e9eef7;
+            box-shadow: 0 5px 20px rgba(15,23,42,0.04);
+        }
+
+        .status-card h2 {
+            margin-top: 0;
+            color: #172554;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        .valid {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #d1fae5;
+        }
+
+        .invalid {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .status-icon {
+            font-size: 24px;
+        }
+
+        .status-description {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.6;
+            margin-top: 5px;
+        }
+
+        .section-heading {
+            margin: 35px 0 8px;
+            font-size: 24px;
+            color: #172554;
+        }
+
+        .section-subheading {
+            color: #64748b;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .block-card {
+            background: white;
+            border: 1px solid #e5eaf3;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(15,23,42,0.04);
+            transition: 0.2s;
+        }
+
+        .block-card:hover {
+            border-color: #bfdbfe;
+            box-shadow: 0 8px 25px rgba(37,99,235,0.06);
+        }
+
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e5eaf3;
+            margin-bottom: 20px;
+        }
+
+        .block-title {
+            font-size: 21px;
+            font-weight: 800;
+            color: #1e40af;
+            margin: 0;
+        }
+
+        .block-badge {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 8px 13px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .timestamp {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .data-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .data-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            line-height: 1.7;
+        }
+
+        .hash-box {
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            color: #334155;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+            line-height: 1.7;
+        }
+
+        .hash-current {
+            background: #eff6ff;
+            border-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .empty-state {
+            background: white;
+            border: 1px solid #e5eaf3;
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .footer-actions {
+            margin-top: 30px;
+            margin-bottom: 25px;
+        }
+
+        .back-button {
+            display: inline-block;
+            text-decoration: none;
+            background: white;
+            color: #1e40af;
+            border: 1px solid #dbeafe;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #eff6ff;
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 16px 5%;
+            }
+
+            .container {
+                padding: 0 14px;
+                margin-top: 20px;
+            }
+
+            .hero {
+                padding: 25px;
+                border-radius: 18px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .status-card,
+            .block-card {
+                padding: 20px;
+            }
+
+            .block-header {
+                align-items: flex-start;
+            }
+
+            .hash-box,
+            .data-box {
+                font-size: 11px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="{{ url_for('admin') }}" class="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}"
+             alt="OcOv Logo">
+    </a>
+
+    <a href="{{ url_for('admin') }}" class="nav-link">
+        Admin Dashboard
+    </a>
+</nav>
+
+<div class="container">
+
+    <!-- Header -->
+    <section class="hero">
+        <div class="hero-label">Blockchain Transparency</div>
+        <h1>Blockchain Ledger</h1>
+        <p>
+            Explore the recorded blocks of the OcOv voting ledger.
+            Each block contains stored data and hash information
+            used to check the integrity of the hash-linked chain.
+        </p>
+    </section>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-label">Blocks Recorded</div>
+
+            <div class="stat-value">
+                {{ blocks|length }}
+            </div>
+
+            <div class="stat-sub">
+                Blocks currently displayed in the ledger
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Integrity Status</div>
+
+            {% if chain_valid %}
+                <div class="stat-value" style="color:#16a34a;">
+                    Verified
+                </div>
+
+                <div class="stat-sub">
+                    Hash-chain verification passed
+                </div>
+            {% else %}
+                <div class="stat-value" style="color:#dc2626;">
+                    Failed
+                </div>
+
+                <div class="stat-sub">
+                    Hash-chain verification failed
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Verification Status -->
+    <section class="status-card">
+
+        <h2>Ledger Integrity Check</h2>
+
+        {% if chain_valid %}
+
+            <div class="status valid">
+                <div class="status-icon">✓</div>
+
+                <div>
+                    Blockchain Integrity Verified
+
+                    <div class="status-description">
+                        The integrity verification of the stored
+                        hash-linked chain passed.
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+
+            <div class="status invalid">
+                <div class="status-icon">!</div>
+
+                <div>
+                    Blockchain Integrity Check Failed
+
+                    <div class="status-description">
+                        The chain verification failed.
+                        The stored ledger requires investigation.
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+    <!-- Blocks -->
+    <h2 class="section-heading">Ledger Blocks</h2>
+
+    <p class="section-subheading">
+        Each block displays its stored data, previous hash
+        and current block hash.
+    </p>
+
+    {% if blocks %}
+
+        {% for block in blocks %}
+
+            <section class="block-card">
+
+                <div class="block-header">
+
+                    <div>
+                        <h3 class="block-title">
+                            Block #{{ block.block_index }}
+                        </h3>
+
+                        <div class="timestamp">
+                            Timestamp: {{ block.timestamp }}
+                        </div>
+                    </div>
+
+                    <div class="block-badge">
+                        BLOCK {{ block.block_index }}
+                    </div>
+
+                </div>
+
+                <div class="data-label">
+                    Block Data
+                </div>
+
+                <div class="data-box">
+                    {{ block.data }}
+                </div>
+
+                <div class="data-label">
+                    Previous Hash
+                </div>
+
+                <div class="hash-box">
+                    {{ block.previous_hash }}
+                </div>
+
+                <div class="data-label">
+                    Current Block Hash
+                </div>
+
+                <div class="hash-box hash-current">
+                    {{ block.block_hash }}
+                </div>
+
+            </section>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-state">
+            <div class="empty-icon">◇</div>
+
+            <h3>No Blocks Recorded</h3>
+
+            <p>
+                No blocks have been recorded in the ledger yet.
+            </p>
+        </div>
+
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="footer-actions">
+        <a href="{{ url_for('admin') }}" class="back-button">
+            ← Back to Admin Dashboard
+        </a>
+    </div>
+
+    <div class="footer">
+        OcOv · One College One Vote
+    </div>
+
+</div>
+
+</body>
+</html>

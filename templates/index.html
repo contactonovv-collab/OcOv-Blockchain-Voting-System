@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OcOv | One College One Vote</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #ffffff;
+            color: #172033;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --blue: #2563eb;
+            --deep: #102554;
+            --light: #eff5ff;
+            --muted: #64748b;
+        }
+
+        /* NAVIGATION */
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 8%;
+            background: rgba(255,255,255,0.96);
+            border-bottom: 1px solid #eef2f7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .brand img {
+            width: 135px;
+            display: block;
+        }
+
+        nav .links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--blue);
+        }
+
+        .nav-button {
+            background: var(--blue);
+            color: white !important;
+            padding: 12px 22px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(37,99,235,0.18);
+        }
+
+        .nav-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* HERO */
+
+        .hero {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            align-items: center;
+            gap: 65px;
+            padding: 90px 8% 110px;
+            background:
+                radial-gradient(circle at 85% 20%, #dceaff 0, transparent 30%),
+                linear-gradient(135deg, #f8fbff, #edf4ff);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 650px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e3edff;
+            color: #2155b5;
+            padding: 9px 15px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            border: 1px solid #d4e4ff;
+        }
+
+        .tag-dot {
+            width: 8px;
+            height: 8px;
+            background: #3b82f6;
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: clamp(44px, 5.2vw, 72px);
+            line-height: 1.08;
+            letter-spacing: -3px;
+            font-weight: 800;
+            color: #14213d;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: var(--blue);
+        }
+
+        .hero-content > p {
+            color: #64748b;
+            font-size: 17px;
+            line-height: 1.85;
+            max-width: 550px;
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            background: var(--blue);
+            color: white;
+            padding: 15px 24px;
+            border-radius: 11px;
+            font-weight: 700;
+            transition: 0.25s;
+            box-shadow: 0 8px 20px rgba(37,99,235,0.18);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            background: #1d4ed8;
+        }
+
+        .secondary {
+            background: white;
+            color: #334155;
+            border: 1px solid #dbe3ef;
+            box-shadow: none;
+        }
+
+        .secondary:hover {
+            background: #f8fafc;
+            color: var(--blue);
+        }
+
+        .hero-note {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* HERO VISUAL */
+
+        .hero-visual {
+            position: relative;
+            max-width: 540px;
+            width: 100%;
+            margin: auto;
+            z-index: 2;
+        }
+
+        .visual-glow {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: #bfdbfe;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.6;
+            top: 10%;
+            right: 0;
+            z-index: -1;
+        }
+
+        .mockup {
+            background: white;
+            border-radius: 22px;
+            border: 1px solid #e4ebf5;
+            box-shadow: 0 30px 80px rgba(30,64,175,0.14);
+            overflow: hidden;
+            transform: rotate(-1deg);
+        }
+
+        .mock-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid #eef2f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mock-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            color: #18356a;
+        }
+
+        .mock-symbol {
+            width: 34px;
+            height: 34px;
+            background: #2563eb;
+            border-radius: 10px;
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 17px;
+        }
+
+        .mock-status {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 7px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .mock-body {
+            padding: 24px;
+        }
+
+        .mock-label {
+            color: #94a3b8;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .mock-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .mock-election {
+            border: 1px solid #e5edf8;
+            border-radius: 15px;
+            padding: 18px;
+            background: #fbfdff;
+        }
+
+        .mock-election-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .mock-election-top h3 {
+            font-size: 15px;
+            color: #1e293b;
+        }
+
+        .mock-badge {
+            color: #2563eb;
+            background: #eaf2ff;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .candidate {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px;
+            border: 1px solid #e5edf8;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            background: white;
+        }
+
+        .candidate.selected {
+            border: 1.5px solid #60a5fa;
+            background: #f4f8ff;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 21px;
+            flex-shrink: 0;
+        }
+
+        .avatar-one {
+            background: #dbeafe;
+        }
+
+        .avatar-two {
+            background: #ede9fe;
+        }
+
+        .avatar-three {
+            background: #ffedd5;
+        }
+
+        .candidate-info {
+            flex: 1;
+        }
+
+        .candidate-info h4 {
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #1e293b;
+        }
+
+        .candidate-info p {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .check {
+            width: 21px;
+            height: 21px;
+            border: 1px solid #cbd5e1;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 12px;
+        }
+
+        .selected .check {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .mock-submit {
+            margin-top: 15px;
+            background: #2563eb;
+            color: white;
+            text-align: center;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .floating-card {
+    position: absolute;
+    background: white;
+    padding: 14px 16px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+    z-index: 3;
+    width: 190px;
+}
+
+.floating-one {
+    left: -15px;
+    top: 25px;
+}
+
+.floating-two {
+    right: -15px;
+    bottom: 25px;
+}
+
+.float-icon {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.floating-card h4 {
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #172554;
+}
+
+.floating-card p {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+        /* STATS STRIP */
+
+        .stats-strip {
+            padding: 30px 8%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            border-bottom: 1px solid #eef2f7;
+            background: white;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat h3 {
+            color: #1d4ed8;
+            font-size: 24px;
+            margin-bottom: 7px;
+        }
+
+        .stat p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* FEATURES */
+
+        .features {
+            padding: 100px 8%;
+            background: white;
+        }
+
+        .section-heading {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 55px;
+        }
+
+        .section-label {
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            margin-bottom: 15px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(30px, 4vw, 44px);
+            letter-spacing: -1.5px;
+            color: #14213d;
+            margin-bottom: 18px;
+        }
+
+        .section-heading p {
+            color: #64748b;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid #e8eef7;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 20px 40px rgba(15,50,100,0.08);
+            border-color: #cfe0ff;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 17px;
+            display: grid;
+            place-items: center;
+            font-size: 26px;
+            margin-bottom: 25px;
+        }
+
+        .icon-blue {
+            background: #e7f0ff;
+        }
+
+        .icon-purple {
+            background: #f0eaff;
+        }
+
+        .icon-green {
+            background: #e5f9ef;
+        }
+
+        .icon-orange {
+            background: #fff1df;
+        }
+
+        .icon-pink {
+            background: #ffeaf2;
+        }
+
+        .icon-cyan {
+            background: #e2f8ff;
+        }
+
+        .card h3 {
+            color: #172033;
+            font-size: 19px;
+            margin-bottom: 14px;
+        }
+
+        .card p {
+            color: #64748b;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* PROCESS */
+
+        .process {
+            padding: 100px 8%;
+            background:
+                radial-gradient(circle at 5% 90%, #1d4ed8 0, transparent 20%),
+                #102554;
+            color: white;
+        }
+
+        .process .section-heading h2 {
+            color: white;
+        }
+
+        .process .section-heading p {
+            color: #cbd5e1;
+        }
+
+        .process .section-label {
+            color: #93c5fd;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .process-card {
+            padding: 32px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .process-card:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+        }
+
+        .number {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            background: #2563eb;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 17px;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .process-card h3 {
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+
+        .process-card p {
+            color: #cbd5e1;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* CTA */
+
+        .cta-section {
+            padding: 85px 8%;
+            background: #f8fbff;
+        }
+
+        .cta-box {
+            max-width: 1100px;
+            margin: auto;
+            padding: 55px;
+            border-radius: 26px;
+            background:
+                radial-gradient(circle at 90% 20%, #4f8df8, transparent 30%),
+                linear-gradient(120deg, #1d4ed8, #163b8c);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            box-shadow: 0 20px 50px rgba(37,99,235,0.18);
+        }
+
+        .cta-box h2 {
+            font-size: 34px;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .cta-box p {
+            color: #dbeafe;
+            line-height: 1.8;
+            max-width: 600px;
+        }
+
+        .cta-button {
+            background: white;
+            color: #1d4ed8;
+            text-decoration: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            background: #eff6ff;
+        }
+
+        /* FOOTER */
+
+        footer {
+            padding: 40px 8%;
+            background: white;
+            border-top: 1px solid #eef2f7;
+            text-align: center;
+        }
+
+        footer .brand img {
+            width: 150px;
+            margin: 0 auto 15px;
+        }
+
+        footer p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        footer .copyright {
+            margin-top: 15px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        /* ANIMATION */
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content {
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .hero-visual {
+            animation: fadeUp 0.9s ease both;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1050px) {
+            .hero {
+                gap: 35px;
+                padding: 75px 6%;
+            }
+
+            .floating-one {
+    left: 5px;
+    top: 10px;
+}
+
+.floating-two {
+    right: 5px;
+    bottom: 10px;
+}
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card:last-child {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 800px) {
+            nav {
+                padding: 15px 6%;
+            }
+
+            nav .links {
+                gap: 18px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 65px 6% 90px;
+            }
+
+            .hero-content {
+                margin: auto;
+            }
+
+            .hero-content > p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                margin-top: 20px;
+            }
+
+            .stats-strip {
+                padding: 25px 5%;
+            }
+
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav .links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav .links a {
+                font-size: 13px;
+            }
+
+            .hero h1 {
+                font-size: 43px;
+                letter-spacing: -2px;
+            }
+
+            .hero-content > p {
+                font-size: 15px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .hero-visual {
+                max-width: 100%;
+            }
+
+            .mock-body {
+                padding: 15px;
+            }
+
+            .mock-title {
+                font-size: 18px;
+            }
+
+            .floating-card {
+                position: relative;
+                display: inline-block;
+                left: auto;
+                right: auto;
+                top: auto;
+                bottom: auto;
+                margin: 12px 4px 0;
+            }
+
+            .visual-glow {
+                display: none;
+            }
+
+            .stats-strip {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .features, .process {
+                padding: 70px 6%;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading h2 {
+                font-size: 32px;
+            }
+
+            .cta-section {
+                padding: 60px 6%;
+            }
+
+            .cta-box {
+                padding: 35px 25px;
+            }
+
+            .cta-box h2 {
+                font-size: 28px;
+            }
+
+            .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OcOv | One College One Vote</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #172554;
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 8%;
+            background: rgba(255,255,255,0.96);
+            border-bottom: 1px solid #e5eaf5;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand img {
+            width: 145px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .links a {
+            color: #334155;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .links a:hover {
+            color: #2563eb;
+        }
+
+        .links .nav-button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 23px;
+            border-radius: 10px;
+        }
+
+        .links .nav-button:hover {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        /* HERO */
+
+        .hero {
+            padding: 85px 8% 90px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 55px;
+            background: linear-gradient(135deg, #f8fbff, #edf4ff);
+            min-height: 600px;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #e0edff;
+            color: #2563eb;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1.2px;
+            margin-bottom: 25px;
+        }
+
+        .tag-dot {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            background: #2563eb;
+        }
+
+        .hero h1 {
+            font-size: clamp(45px, 5vw, 72px);
+            line-height: 1.08;
+            letter-spacing: -2px;
+            color: #14234b;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: #2563eb;
+        }
+
+        .hero-content > p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #64748b;
+            max-width: 510px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            background: #2563eb;
+            color: white;
+            padding: 16px 23px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-flex;
+            gap: 15px;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            background: #1d4ed8;
+        }
+
+        .button.secondary {
+            background: white;
+            color: #2563eb;
+            border: 1px solid #dbe5f5;
+        }
+
+        .button.secondary:hover {
+            background: #eff6ff;
+        }
+
+        .hero-note {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* HERO IMAGE */
+
+        .hero-visual {
+            position: relative;
+            min-height: 440px;
+        }
+
+        .hero-photo {
+            width: 100%;
+            height: 430px;
+            object-fit: cover;
+            border-radius: 26px;
+            box-shadow: 0 25px 60px rgba(30, 64, 175, 0.18);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            inset: 0;
+            border-radius: 26px;
+            background: linear-gradient(
+                0deg,
+                rgba(15, 23, 42, 0.45),
+                transparent 60%
+            );
+            pointer-events: none;
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 28px;
+            left: 28px;
+            color: white;
+            z-index: 2;
+        }
+
+        .image-caption h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .image-caption p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            padding: 18px;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(15, 23, 42, 0.12);
+            z-index: 3;
+        }
+
+        .floating-one {
+            left: -35px;
+            top: 35px;
+        }
+
+        .floating-two {
+            right: -25px;
+            bottom: 35px;
+        }
+
+        .float-icon {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .floating-card h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #172554;
+        }
+
+        .floating-card p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* STATS STRIP */
+
+        .stats-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 35px 8%;
+            border-bottom: 1px solid #edf0f5;
+            background: white;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .stat h3 {
+            color: #2563eb;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .stat p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* FEATURES */
+
+        .features {
+            padding: 100px 8%;
+        }
+
+        .section-heading {
+            text-align: center;
+            max-width: 750px;
+            margin: 0 auto 55px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #2563eb;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(30px, 4vw, 43px);
+            color: #172554;
+            margin-bottom: 18px;
+        }
+
+        .section-heading p {
+            color: #64748b;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            border: 1px solid #e7edf7;
+            border-radius: 20px;
+            overflow: hidden;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(30, 64, 175, 0.09);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            margin-bottom: 18px;
+        }
+
+        .icon-blue { background: #e0f2fe; }
+        .icon-purple { background: #ede9fe; }
+        .icon-green { background: #dcfce7; }
+        .icon-orange { background: #ffedd5; }
+        .icon-pink { background: #fce7f3; }
+        .icon-cyan { background: #cffafe; }
+
+        .card h3 {
+            color: #172554;
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* PROCESS */
+
+        .process {
+            padding: 100px 8%;
+            background: #f8fafc;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .process-card {
+            background: white;
+            border: 1px solid #e5eaf5;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .process-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .process-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .process-card-content {
+            padding: 25px;
+        }
+
+        .number {
+            color: #2563eb;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 14px;
+            letter-spacing: 1px;
+        }
+
+        .process-card h3 {
+            font-size: 20px;
+            color: #172554;
+            margin-bottom: 12px;
+        }
+
+        .process-card p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        /* CTA */
+
+        .cta-section {
+            padding: 85px 8%;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb, #60a5fa);
+            padding: 55px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            color: white;
+        }
+
+        .cta-box h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            margin-bottom: 15px;
+        }
+
+        .cta-box p {
+            color: #dbeafe;
+            line-height: 1.8;
+            max-width: 600px;
+            font-size: 15px;
+        }
+
+        .cta-button {
+            background: white;
+            color: #2563eb;
+            padding: 17px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            background: #eff6ff;
+        }
+
+        /* FOOTER */
+
+        footer {
+            padding: 40px 8%;
+            background: #0f172a;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        footer .brand img {
+            width: 140px;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 13px;
+            margin: 8px 0;
+        }
+
+        footer .copyright {
+            margin-top: 25px;
+            color: #64748b;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 60px;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-visual {
+                margin: 0 25px;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .process-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .floating-one {
+                left: -20px;
+            }
+
+            .floating-two {
+                right: -20px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            .brand img {
+                width: 110px;
+            }
+
+            .links {
+                gap: 15px;
+            }
+
+            .links a {
+                font-size: 12px;
+            }
+
+            .links a:nth-child(2),
+            .links a:nth-child(3) {
+                display: none;
+            }
+
+            .links .nav-button {
+                padding: 10px 15px;
+            }
+
+            .hero {
+                padding: 55px 5%;
+                gap: 35px;
+            }
+
+            .hero h1 {
+                font-size: 49px;
+            }
+
+            .hero-visual {
+                margin: 0;
+                min-height: 340px;
+            }
+
+            .hero-photo {
+                height: 340px;
+            }
+
+            .floating-card {
+                padding: 12px;
+            }
+
+            .floating-one {
+                left: -10px;
+                top: 15px;
+            }
+
+            .floating-two {
+                right: -10px;
+                bottom: 15px;
+            }
+
+            .floating-card p {
+                font-size: 10px;
+            }
+
+            .stats-strip {
+                padding: 25px 5%;
+            }
+
+            .stat h3 {
+                font-size: 25px;
+            }
+
+            .stat p {
+                font-size: 11px;
+            }
+
+            .features,
+            .process {
+                padding: 70px 5%;
+            }
+
+            .cards,
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-image {
+                height: 230px;
+            }
+
+            .process-card img {
+                height: 230px;
+            }
+
+            .cta-section {
+                padding: 55px 5%;
+            }
+
+            .cta-box {
+                padding: 35px 25px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cta-button {
+                white-space: normal;
+            }
+
+            footer {
+                padding: 35px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav>
+        <a href="/" class="brand">
+            <img src="{{ url_for('static', filename='logo.png') }}"
+                 alt="OcOv - One College One Vote">
+        </a>
+
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="#features">Features</a>
+            <a href="#process">How It Works</a>
+            <a href="/login" class="nav-button">Login →</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="tag">
+                <span class="tag-dot"></span>
+                THE FUTURE OF CAMPUS ELECTIONS
+            </div>
+
+            <h1>
+                Your Vote.<br>
+                Your Voice.<br>
+                <span>Your Campus.</span>
+            </h1>
+
+            <p>
+                A smarter digital election experience built for campus communities.
+                Vote for your representatives, participate in student elections
+                and explore transparent election records.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="/login" class="button">
+                    Enter Voting Portal <span>→</span>
+                </a>
+
+                <a href="#features" class="button secondary">
+                    Explore OcOv
+                </a>
+            </div>
+
+            <div class="hero-note">
+                Designed for student elections and campus representation.
+            </div>
+
+        </div>
+
+        <!-- HERO PHOTO -->
+
+        <div class="hero-visual">
+
+            <img
+                class="hero-photo"
+                src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1200&q=85"
+                alt="University students on a campus">
+
+            <div class="photo-overlay"></div>
+
+            <div class="image-caption">
+                <h3>Make Your Voice Count</h3>
+                <p>Student participation. Digital elections.</p>
+            </div>
+
+            <div class="floating-card floating-one">
+                <div class="float-icon">🔒</div>
+                <h4>Vote Protection</h4>
+                <p>One vote per eligible student</p>
+            </div>
+
+            <div class="floating-card floating-two">
+                <div class="float-icon">⛓️</div>
+                <h4>Blockchain Ledger</h4>
+                <p>Hash-linked vote records</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- VALUE STRIP -->
+
+    <section class="stats-strip">
+
+        <div class="stat">
+            <h3>01</h3>
+            <p>Verified Student Access</p>
+        </div>
+
+        <div class="stat">
+            <h3>02</h3>
+            <p>Election-wise Voting</p>
+        </div>
+
+        <div class="stat">
+            <h3>03</h3>
+            <p>Blockchain Record Tracking</p>
+        </div>
+
+    </section>
+
+    <!-- FEATURES -->
+
+    <section class="features" id="features">
+
+        <div class="section-heading">
+
+            <div class="section-label">
+                THE OcOv EXPERIENCE
+            </div>
+
+            <h2>Designed for Better Campus Elections</h2>
+
+            <p>
+                Bringing voting, eligibility management, election results
+                and record verification together in one digital platform.
+            </p>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <img
+                    class="card-image"
+                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=80"
+                    alt="Students studying together">
+
+                <div class="card-content">
+                    <div class="card-icon icon-blue">🔐</div>
+
+                    <h3>Verified Access</h3>
+
+                    <p>
+                        Student registration with email verification
+                        and administrator-controlled election eligibility.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <img
+                    class="card-image"
+                    src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=80"
+                    alt="Digital technology and network">
+
+                <div class="card-content">
+                    <div class="card-icon icon-purple">⛓️</div>
+
+                    <h3>Blockchain Records</h3>
+
+                    <p>
+                        Votes are associated with hash-linked ledger
+                        records designed to help detect record changes.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <img
+                    class="card-image"
+                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80"
+                    alt="Data analytics dashboard">
+
+                <div class="card-content">
+                    <div class="card-icon icon-green">📊</div>
+
+                    <h3>Election Results</h3>
+
+                    <p>
+                        Election-wise vote counts, percentages,
+                        winner identification and tie detection.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <img
+                    class="card-image"
+                    src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?auto=format&fit=crop&w=900&q=80"
+                    alt="Ballot voting">
+
+                <div class="card-content">
+                    <div class="card-icon icon-orange">🗳️</div>
+
+                    <h3>Simple Voting</h3>
+
+                    <p>
+                        View candidates, select a choice and submit
+                        a ballot through a straightforward digital interface.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <img
+                    class="card-image"
+                    src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80"
+                    alt="Group of students together">
+
+                <div class="card-content">
+                    <div class="card-icon icon-pink">👥</div>
+
+                    <h3>Eligibility Management</h3>
+
+                    <p>
+                        Administrators manage which students are
+                        authorized to participate in each election.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <img
+                    class="card-image"
+                    src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80"
+                    alt="Document review and auditing">
+
+                <div class="card-content">
+                    <div class="card-icon icon-cyan">🔎</div>
+
+                    <h3>Election Audit</h3>
+
+                    <p>
+                        Students can inspect available election audit
+                        information after official result declaration.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- PROCESS -->
+
+    <section class="process" id="process">
+
+        <div class="section-heading">
+
+            <div class="section-label">
+                THREE SIMPLE STEPS
+            </div>
+
+            <h2>How OcOv Works</h2>
+
+            <p>
+                A streamlined digital process for student participation
+                in campus elections.
+            </p>
+
+        </div>
+
+        <div class="process-grid">
+
+            <div class="process-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80"
+                    alt="Student accessing a digital platform">
+
+                <div class="process-card-content">
+                    <div class="number">01</div>
+
+                    <h3>Verify & Login</h3>
+
+                    <p>
+                        Register your account, verify your email
+                        and access elections for which you are eligible.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="process-card">
+
+                <img
+    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=80"
+    alt="Students participating in campus activities">
+
+                <div class="process-card-content">
+                    <div class="number">02</div>
+
+                    <h3>Cast Your Vote</h3>
+
+                    <p>
+                        Review candidates, select your preferred choice
+                        and submit your ballot.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="process-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=900&q=80"
+                    alt="Team reviewing digital information">
+
+                <div class="process-card-content">
+                    <div class="number">03</div>
+
+                    <h3>Explore Results</h3>
+
+                    <p>
+                        View officially declared election results
+                        and available audit information.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- CTA -->
+
+    <section class="cta-section">
+
+        <div class="cta-box">
+
+            <div>
+                <h2>Your Campus. Your Decision.</h2>
+
+                <p>
+                    Participate in campus elections through OcOv.
+                    Access your student portal and make your vote count.
+                </p>
+            </div>
+
+            <a href="/login" class="cta-button">
+                Access Voting Portal →
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <a href="/" class="brand">
+            <img src="{{ url_for('static', filename='logo.png') }}"
+                 alt="OcOv Logo">
+        </a>
+
+        <p>One College One Vote</p>
+
+        <p>
+            Blockchain-Based College Voting System
+        </p>
+
+        <p class="copyright">
+            © 2026 OcOv. Academic Project.
+        </p>
+
+    </footer>
+
+</body>
+</html>

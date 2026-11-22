@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OcOv | Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #dbeafe, transparent 45%),
+                linear-gradient(135deg, #f4f7ff, #eef4ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.96);
+            padding: 40px;
+            border-radius: 22px;
+            box-shadow: 0 25px 70px rgba(23, 70, 162, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo img {
+            width: 145px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #eaf1ff;
+            color: #1746a2;
+            padding: 7px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #172033;
+            margin: 0 0 10px;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #667085;
+            margin-bottom: 28px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            color: #344054;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 9px;
+            border: 1px solid #d0d5dd;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+            background: #fff;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 28px;
+            background: linear-gradient(135deg, #1746a2, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(23, 70, 162, 0.2);
+        }
+
+        .message {
+            background: #eaf1ff;
+            color: #1746a2;
+            padding: 13px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            border: 1px solid #d5e3ff;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .links a {
+            display: block;
+            text-decoration: none;
+            color: #1746a2;
+            margin-top: 13px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eaecf0;
+            margin: 25px 0 20px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #98a2b3;
+            font-size: 12px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 28px 22px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}"
+                 alt="OcOv Logo">
+        </div>
+
+        <div style="text-align: center;">
+            <span class="tag">SECURE STUDENT ELECTIONS</span>
+        </div>
+
+        <h1>Welcome Back</h1>
+
+        <p class="subtitle">
+            Sign in to your OcOv account and participate
+            in your college elections.
+        </p>
+
+        {% for message in get_flashed_messages() %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+
+        <form method="POST">
+
+            <label for="email">College Email</label>
+            <input type="email"
+                   id="email"
+                   name="email"
+                   placeholder="Enter your college email"
+                   required>
+
+            <label for="password">Password</label>
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Enter your password"
+                   required>
+
+            <button type="submit">Sign In</button>
+
+        </form>
+
+        <div class="divider"></div>
+
+        <div class="links">
+            <a href="/register">Don't have an account? Register</a>
+            <a href="/">← Back to Home</a>
+        </div>
+
+        <div class="footer">
+            OcOv · One College One Vote
+        </div>
+
+    </div>
+
+</body>
+</html>

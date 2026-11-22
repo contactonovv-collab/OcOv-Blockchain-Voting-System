@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OcOv | Candidate Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f7ff;
+            color: #1e293b;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 7%;
+            background: white;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav img {
+            width: 140px;
+            object-fit: contain;
+        }
+
+        nav div {
+            display: flex;
+            gap: 24px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            color: #1e40af;
+        }
+
+        /* Main */
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #0f172a, #1d4ed8, #60a5fa);
+            color: white;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 12px 30px rgba(37,99,235,0.15);
+        }
+
+        .hero-label {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            margin: 0 0 12px;
+            font-size: 34px;
+        }
+
+        .hero p {
+            margin: 0;
+            color: #dbeafe;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e5edff;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 23px;
+            color: #0f172a;
+        }
+
+        .section-description {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* Form */
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            background: #f8fbff;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+            background: white;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* Buttons */
+        button {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            transform: translateY(-1px);
+        }
+
+        /* Candidate Cards */
+        .candidate-item {
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 20px;
+            background: #fbfdff;
+            transition: 0.2s;
+        }
+
+        .candidate-item:hover {
+            border-color: #bfdbfe;
+            box-shadow: 0 5px 15px rgba(37,99,235,0.05);
+        }
+
+        .candidate-item h3 {
+            color: #2563eb;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .candidate-info {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .candidate-info p {
+            margin: 8px 0;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .candidate-description {
+            color: #475569;
+            line-height: 1.7;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        /* Flash */
+        .flash-message {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .note {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            nav img {
+                width: 110px;
+            }
+
+            nav div {
+                gap: 12px;
+            }
+
+            nav a {
+                font-size: 13px;
+            }
+
+            .container {
+                margin: 25px auto;
+                padding: 0 15px;
+            }
+
+            .hero {
+                padding: 28px 22px;
+                border-radius: 18px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .card {
+                padding: 22px 18px;
+            }
+
+            .card h2 {
+                font-size: 20px;
+            }
+
+            .candidate-item {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="OcOv Logo">
+    <div>
+        <a href="{{ url_for('admin') }}">Admin Panel</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+        <span class="hero-label">ELECTION ADMINISTRATION</span>
+        <h1>Candidate Management</h1>
+        <p>Add and manage candidates participating in individual college elections.</p>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- Add Candidate -->
+    <div class="card">
+        <h2>Add a Candidate</h2>
+        <p class="section-description">
+            Register a candidate by selecting an election and entering their details.
+        </p>
+
+        <form method="POST" action="{{ url_for('manage_candidates') }}">
+
+            <label>Select Election</label>
+            <select name="election_id" required>
+                <option value="">Choose an election</option>
+                {% for election in elections %}
+                    <option value="{{ election.id }}">{{ election.title }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Candidate Name</label>
+            <input type="text" name="name"
+                   placeholder="Full candidate name" required>
+
+            <label>Party / Group / Position</label>
+            <input type="text" name="party"
+                   placeholder="e.g. Independent or Team Blue">
+
+            <label>Candidate Description</label>
+            <textarea name="description" rows="4"
+                      placeholder="Brief introduction or manifesto..."></textarea>
+
+            <button type="submit">+ Add Candidate</button>
+        </form>
+    </div>
+
+    <!-- Registered Candidates -->
+    <div class="card">
+        <h2>Registered Candidates</h2>
+        <p class="section-description">
+            Review the candidates currently registered in your elections.
+        </p>
+
+        {% if candidates %}
+            {% for candidate in candidates %}
+                <div class="candidate-item">
+
+                    <h3>{{ candidate.name }}</h3>
+
+                    <div class="candidate-info">
+                        <p>
+                            <strong>Election:</strong>
+                            {{ candidate.election_title }}
+                        </p>
+
+                        <p>
+                            <strong>Party / Group:</strong>
+                            {{ candidate.party or "Not specified" }}
+                        </p>
+                    </div>
+
+                    <p class="candidate-description">
+                        {{ candidate.description or "No description provided." }}
+                    </p>
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="note">No candidates have been added yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<footer>
+    OcOv — One College One Vote
+</footer>
+
+</body>
+</html>

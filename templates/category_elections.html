@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.name }} Elections | OcOv</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fc;
+            color: #1e293b;
+        }
+
+        nav {
+            background: #142b52;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        nav h2 {
+            font-size: 22px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .category-header {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(15,23,42,.06);
+            margin-bottom: 30px;
+        }
+
+        .category-header img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .category-info {
+            padding: 25px;
+        }
+
+        .category-info h1 {
+            margin-bottom: 12px;
+            font-size: 30px;
+        }
+
+        .category-info p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .section-title {
+            margin-bottom: 20px;
+        }
+
+        .election-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .election-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(15,23,42,.06);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .election-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(15,23,42,.10);
+        }
+
+        .election-card img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+        }
+
+        .election-content {
+            padding: 22px;
+        }
+
+        .election-content h3 {
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-upcoming {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-ended {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .status-unknown {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-voted {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-declared {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .dates {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 18px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 9px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+        }
+
+        .winner-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 13px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            color: #166534;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .tie-box {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            padding: 13px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            color: #9a3412;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            color: #64748b;
+            box-shadow: 0 5px 20px rgba(15,23,42,.06);
+        }
+
+        @media(max-width:600px) {
+            nav {
+                padding: 16px 5%;
+            }
+
+            nav a {
+                margin-left: 8px;
+            }
+
+            .category-header img {
+                height: 200px;
+            }
+
+            .category-info h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>OcOv | Elections</h2>
+    <div>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <a href="{{ url_for('dashboard') }}" class="back-link">
+        ← Back to Dashboard
+    </a>
+
+    <div class="category-header">
+
+        {% if category.image %}
+            <img src="{{ url_for('static', filename='uploads/categories/' + category.image) }}"
+                 alt="{{ category.name }}">
+        {% endif %}
+
+        <div class="category-info">
+            <h1>{{ category.name }}</h1>
+            <p>{{ category.description or "Explore elections in this category." }}</p>
+        </div>
+
+    </div>
+
+    <h2 class="section-title">Available Elections</h2>
+
+    {% if elections %}
+
+        <div class="election-grid">
+
+            {% for election in elections %}
+
+                <div class="election-card">
+
+                    {% if election.thumbnail %}
+                        <img src="{{ url_for('static', filename='uploads/elections/' + election.thumbnail) }}"
+                             alt="{{ election.title }}">
+                    {% endif %}
+
+                    <div class="election-content">
+
+                        <h3>{{ election.title }}</h3>
+
+                        <p class="description">
+                            {{ election.description or "No description provided." }}
+                        </p>
+
+                        <!-- Election status -->
+                        {% if election.is_open %}
+                            <span class="status status-active">ACTIVE</span>
+
+                        {% elif election.is_upcoming %}
+                            <span class="status status-upcoming">UPCOMING</span>
+
+                        {% elif election.is_closed %}
+                            <span class="status status-ended">ENDED</span>
+
+                        {% else %}
+                            <span class="status status-unknown">DATE NOT SET</span>
+                        {% endif %}
+
+                        <!-- Voting status -->
+                        {% if election.has_voted %}
+                            <div>
+                                <span class="status status-voted">
+                                    YOU HAVE VOTED
+                                </span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Election dates -->
+                        <div class="dates">
+
+                            <div>
+                                <strong>Starts:</strong>
+                                {{ election.start_time | datetime_format }}
+                            </div>
+
+                            <div>
+                                <strong>Ends:</strong>
+                                {{ election.end_time | datetime_format }}
+                            </div>
+
+                        </div>
+
+                        <!-- Results information -->
+                        {% if election.is_closed %}
+
+                            {% if election.results_declared %}
+
+                                <span class="status status-declared">
+                                    RESULTS DECLARED
+                                </span>
+
+                                {% if election.is_tie %}
+
+                                    <div class="tie-box">
+                                        <strong>Election resulted in a tie.</strong>
+                                        <br>
+
+                                        {% for candidate in election.winner_candidates %}
+                                            {{ candidate.name }}
+                                            ({{ candidate.vote_count }} votes)
+                                            {% if not loop.last %}<br>{% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                {% elif election.winner %}
+
+                                    <div class="winner-box">
+                                        <strong>Winner:</strong>
+                                        {{ election.winner.name }}
+
+                                        {% if election.winner.party %}
+                                            <br>
+                                            <strong>Party:</strong>
+                                            {{ election.winner.party }}
+                                        {% endif %}
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="winner-box">
+                                        Results declared, but no votes were recorded.
+                                    </div>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <span class="status status-pending">
+                                    RESULTS PENDING
+                                </span>
+
+                            {% endif %}
+
+                        {% endif %}
+
+                        <!-- Actions -->
+                        {% if election.is_open and not election.has_voted %}
+
+                            <a class="btn"
+                               href="{{ url_for('vote', election_id=election.id) }}">
+                                Vote Now
+                            </a>
+
+                        {% elif election.has_voted %}
+
+                            <span style="color:#64748b;font-size:14px;">
+                                Voting completed
+                            </span>
+
+                        {% elif election.is_upcoming %}
+
+                            <span style="color:#64748b;font-size:14px;">
+                                Voting hasn't started yet
+                            </span>
+
+                        {% elif election.is_closed and election.results_declared %}
+
+                            <a class="btn btn-secondary"
+                               href="{{ url_for('election_results', election_id=election.id) }}">
+                                View Results
+                            </a>
+
+                        {% elif election.is_closed %}
+
+                            <span style="color:#64748b;font-size:14px;">
+                                Election ended
+                            </span>
+
+                        {% else %}
+
+                            <span style="color:#64748b;font-size:14px;">
+                                Election schedule unavailable
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty">
+            <h3>No elections available</h3>
+            <p>There are currently no elections assigned to you in this category.</p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

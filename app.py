@@ -1989,5 +1989,6 @@ def temporary_admin_reset():
         <input name="password" type="password" placeholder="New password" required>
         <button type="submit">Reset Password</button>
     </form>
+    """
 if __name__ == "__main__":
     app.run(debug=True)

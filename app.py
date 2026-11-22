@@ -1969,8 +1969,16 @@ def temporary_admin_reset():
         ).fetchone()
 
         if not user:
-            connection.close()
-            return "Admin account not found.", 404
+    connection.execute(
+        """
+        INSERT INTO users (name, email, roll_number, password_hash, role, email_verified)
+        VALUES (?, ?, ?, ?, 'admin', 1)
+        """,
+        ("OcOv Admin", email, None, generate_password_hash(new_password))
+    )
+    connection.commit()
+    connection.close()
+    return "Admin account created successfully. You can now log in."
 
         connection.execute(
             "UPDATE users SET password_hash = ? WHERE id = ?",

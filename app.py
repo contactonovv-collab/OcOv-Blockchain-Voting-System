@@ -1500,8 +1500,8 @@ def election_results(election_id):
         if election["end_time"]:
              end_time = datetime.fromisoformat(election["end_time"])
             if now_ist() < end_time:
-               conn.close()
-               flash("Election results are available only after the election ends.")
+                conn.close()
+                flash("Election results are available only after the election ends.")
                 return redirect(url_for("admin"))
 
         # Candidate results

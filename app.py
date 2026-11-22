@@ -826,7 +826,7 @@ def admin():
                             flash("Election created successfully!")
                             return redirect(url_for("admin"))
 
-            except ValueError:
+                except ValueError:
                 flash("Please enter valid election dates.")
 
     # Load election management data

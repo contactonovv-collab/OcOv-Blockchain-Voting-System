@@ -46,6 +46,8 @@ initialize_database()
 def now_ist():
     """Return current India Standard Time as a naive datetime."""
     return datetime.now(ZoneInfo("Asia/Kolkata")).replace(tzinfo=None)
+
+
 # Basic blocklist of disposable email domains
 DISPOSABLE_DOMAINS = {
     "tempmail.com",
@@ -67,9 +69,11 @@ def is_disposable_email(email):
     domain = email.rsplit("@", 1)[-1].lower()
     return domain in DISPOSABLE_DOMAINS
 
+
 @app.route("/")
 def home():
     return render_template("index.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -101,6 +105,7 @@ def register():
         if password != confirm_password:
             flash("Passwords do not match.")
             return render_template("register.html")
+
         connection = get_connection()
 
         existing_user = connection.execute(
@@ -129,6 +134,7 @@ def register():
 
         otp = str(secrets.randbelow(900000) + 100000)
         otp_expiry = (datetime.utcnow() + timedelta(minutes=10)).isoformat()
+
         password_hash = generate_password_hash(password)
         otp_hash_value = hash_otp(otp)
 
@@ -166,6 +172,7 @@ def register():
         return redirect(url_for("verify_otp"))
 
     return render_template("register.html")
+
 
 @app.route("/verify-otp", methods=["GET", "POST"])
 def verify_otp():
@@ -266,6 +273,7 @@ def verify_otp():
 
     return render_template("verify_otp.html")
 
+
 @app.route("/resend-otp", methods=["POST"])
 def resend_otp():
 
@@ -356,6 +364,7 @@ def login():
 
     return render_template("login.html")
 
+
 @app.route("/logout")
 def logout():
     session.clear()
@@ -440,6 +449,7 @@ def view_category(category_id):
             start_time is not None
             and now < start_time
         )
+
         election["is_closed"] = (
             end_time is not None
             and now > end_time
@@ -494,6 +504,7 @@ def view_category(category_id):
                 if total_votes > 0 and results:
 
                     highest_votes = results[0]["vote_count"]
+
                     winner_candidates = [
                         dict(candidate)
                         for candidate in results
@@ -565,7 +576,8 @@ def dashboard():
         """,
         (session["user_id"],)
     ).fetchall()
-# Fetch enabled categories for the dashboard
+
+    # Fetch enabled categories for the dashboard
     categories = connection.execute(
         """
         SELECT *
@@ -593,6 +605,7 @@ def dashboard():
             )
         except (ValueError, TypeError):
             start_time = None
+
         try:
             end_time = (
                 datetime.fromisoformat(election["end_time"])
@@ -617,6 +630,7 @@ def dashboard():
             end_time is not None
             and now > end_time
         )
+
         election["date_not_set"] = (
             start_time is None or end_time is None
         )
@@ -660,6 +674,7 @@ def dashboard():
                 ).fetchone()["total"]
 
                 connection.close()
+
                 election["total_votes"] = total_votes
 
                 if total_votes > 0 and results:
@@ -709,19 +724,21 @@ def dashboard():
             election["sort_priority"] = 4
 
         elections.append(election)
-    # Sort elections by priority, then by nearest start time
-        elections.sort(
-            key=lambda election: (
-                election["sort_priority"],
-                election.get("start_time") or ""
-            )
-        )
 
-        return render_template(
-            "dashboard.html",
-            elections=elections,
-            categories=categories
+    # Sort elections by priority, then by nearest start time
+    elections.sort(
+        key=lambda election: (
+            election["sort_priority"],
+            election.get("start_time") or ""
         )
+    )
+
+    return render_template(
+        "dashboard.html",
+        elections=elections,
+        categories=categories
+    )
+
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
 
@@ -746,7 +763,7 @@ def admin():
             flash("Please fill in the election title, category and dates.")
 
         else:
-             try:
+            try:
                 start_date = datetime.fromisoformat(start_time)
                 end_date = datetime.fromisoformat(end_time)
 
@@ -793,6 +810,7 @@ def admin():
                             flash("Please upload a JPG, JPEG, PNG or WEBP image.")
 
                         else:
+
                             if image and image.filename and thumbnail_filename:
                                 image.save(
                                     os.path.join(
@@ -826,7 +844,7 @@ def admin():
                             flash("Election created successfully!")
                             return redirect(url_for("admin"))
 
-                except ValueError:
+            except ValueError:
                 flash("Please enter valid election dates.")
 
     # Load election management data
@@ -858,6 +876,7 @@ def admin():
         ORDER BY e.id DESC
         """
     ).fetchall()
+
     elections = [dict(election) for election in elections]
 
     for election in elections:
@@ -885,6 +904,7 @@ def admin():
     total_votes_cast = connection.execute(
         "SELECT COUNT(*) FROM ballots"
     ).fetchone()[0]
+
     voter_turnout = (
         (total_votes_cast / total_eligible_voters) * 100
         if total_eligible_voters > 0
@@ -933,6 +953,7 @@ def manage_categories():
                 "SELECT * FROM election_categories WHERE id = ?",
                 (category_id,)
             ).fetchone()
+
             if category:
                 new_status = 0 if category["enabled"] else 1
 
@@ -948,6 +969,7 @@ def manage_categories():
             return redirect(url_for("manage_categories"))
 
         if action == "create":
+
             name = request.form.get("name", "").strip()
             description = request.form.get("description", "").strip()
             image = request.files.get("image")
@@ -972,6 +994,7 @@ def manage_categories():
             if image and image.filename:
 
                 original_filename = secure_filename(image.filename)
+
                 if "." not in original_filename:
                     connection.close()
                     flash("Invalid image file.")
@@ -1001,6 +1024,7 @@ def manage_categories():
                 """,
                 (name, description, image_filename)
             )
+
             connection.commit()
             connection.close()
 
@@ -1025,6 +1049,7 @@ def manage_categories():
         "category_management.html",
         categories=categories
     )
+
 
 @app.route("/admin/candidates", methods=["GET", "POST"])
 def manage_candidates():
@@ -1054,6 +1079,7 @@ def manage_candidates():
                 "SELECT id FROM elections WHERE id = ?",
                 (election_id,)
             ).fetchone()
+
             if not election:
                 flash("Selected election does not exist.")
 
@@ -1070,23 +1096,23 @@ def manage_candidates():
                 connection.commit()
                 flash("Candidate added successfully!")
 
-        elections = connection.execute(
-        """
-        SELECT elections.*,
-            (SELECT COUNT(*)
-            FROM election_eligibility
-            WHERE election_id = elections.id) AS eligible_count,
+    elections = connection.execute(
+    """
+    SELECT elections.*,
+        (SELECT COUNT(*)
+         FROM election_eligibility
+         WHERE election_id = elections.id) AS eligible_count,
 
-            (SELECT COUNT(*)
-             FROM ballots
-             WHERE election_id = elections.id) AS votes_count
+        (SELECT COUNT(*)
+         FROM ballots
+         WHERE election_id = elections.id) AS votes_count
 
-        FROM elections
-        ORDER BY elections.id DESC
-        """
+    FROM elections
+    ORDER BY elections.id DESC
+    """
 ).fetchall()
 
-        elections = [dict(election) for election in elections]
+    elections = [dict(election) for election in elections]
 
     for election in elections:
         eligible = election["eligible_count"]
@@ -1112,6 +1138,7 @@ def manage_candidates():
         elections=elections,
         candidates=candidates
     )
+
 
 @app.route("/admin/eligibility", methods=["GET", "POST"])
 def manage_eligibility():
@@ -1208,7 +1235,7 @@ def manage_eligibility():
         """
     ).fetchall()
 
-     # Fetch eligibility records with student and election details
+    # Fetch eligibility records with student and election details
     eligibility = connection.execute(
         """
         SELECT
@@ -1229,7 +1256,6 @@ def manage_eligibility():
         ORDER BY elections.id DESC, users.name ASC
         """
     ).fetchall()
-
 
     # Dashboard statistics
     total_students = connection.execute(
@@ -1429,30 +1455,30 @@ def vote(election_id):
 
             add_block({
                 "election_id": election_id,
-                "ballot_hash": ballot_hash        
+                "ballot_hash": ballot_hash
             })
 
             flash("Your vote has been submitted successfully!", "success")
             return redirect(url_for("dashboard"))
 
         return render_template(
-                "voting.html",
-                election=election,
-                candidates=candidates
-            )
+            "voting.html",
+            election=election,
+            candidates=candidates
+        )
 
-        except Exception as e:
+    except Exception as e:
 
-            print("VOTE ERROR:", repr(e))
+        print("VOTE ERROR:", repr(e))
 
-            if connection.in_transaction:
-                connection.rollback()
+        if connection.in_transaction:
+            connection.rollback()
 
-            flash("Vote submission failed. Please try again.")
-            return redirect(url_for("dashboard"))
+        flash("Vote submission failed. Please try again.")
+        return redirect(url_for("dashboard"))
 
-        finally:
-            connection.close()
+    finally:
+        connection.close()
 
 @app.route("/admin/results/<int:election_id>")
 def election_results(election_id):
@@ -1544,16 +1570,17 @@ def election_results(election_id):
             candidate for candidate in results
             if candidate["vote_count"] == highest_votes
         ]
+
     winner = None
-        is_tie = False
+    is_tie = False
 
-        if total_votes > 0:
+    if total_votes > 0:
 
-            if len(winner_candidates) == 1:
-                winner = winner_candidates[0]
+        if len(winner_candidates) == 1:
+            winner = winner_candidates[0]
 
-            elif len(winner_candidates) > 1:
-                is_tie = True
+        elif len(winner_candidates) > 1:
+            is_tie = True
 
     # Winner margin analytics
     runner_up_votes = results[1]["vote_count"] if len(results) > 1 else 0
@@ -1569,6 +1596,7 @@ def election_results(election_id):
         winner_margin = 0
         winner_margin_percentage = 0
         competition_level = "Tie"
+
     elif len(results) == 1:
 
         winner_margin = results[0]["vote_count"]
@@ -1615,8 +1643,6 @@ def election_results(election_id):
         winner_margin_percentage=winner_margin_percentage,
         competition_level=competition_level
     )
-
-
 @app.route("/admin/results/<int:election_id>/export")
 def export_election_results(election_id):
 
@@ -1773,8 +1799,6 @@ def export_election_results(election_id):
     writer.writerow(["Candidate Results"])
     writer.writerow(["Candidate Name", "Party", "Votes", "Vote Share"])
 
-
-
     for candidate in results:
         vote_percentage = (
             candidate["vote_count"] / total_votes * 100
@@ -1796,7 +1820,6 @@ def export_election_results(election_id):
     response.headers["Content-Type"] = "text/csv; charset=utf-8"
 
     return response
-
 
 @app.route("/admin/declare-results/<int:election_id>", methods=["POST"])
 def declare_results(election_id):
@@ -1850,7 +1873,6 @@ def declare_results(election_id):
     flash("Election results have been officially declared.")
 
     return redirect(url_for("election_results", election_id=election_id))
-
 
 @app.route("/admin/blockchain")
 def blockchain_view():
@@ -1909,6 +1931,7 @@ def election_audit(election_id):
     ).fetchone()["total"]
 
     conn.close()
+
     blocks = get_blocks()
     chain_valid = verify_chain()
 

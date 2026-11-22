@@ -543,7 +543,7 @@ def view_category(category_id):
         elections=elections
     )
 
-        @app.route("/dashboard")
+@app.route("/dashboard")
 def dashboard():
 
     if "user_id" not in session:

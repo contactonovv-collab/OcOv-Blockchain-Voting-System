@@ -1948,5 +1948,46 @@ def election_audit(election_id):
         chain_valid=chain_valid,
         election_blocks=election_blocks
     )
+@app.route("/temporary-admin-reset", methods=["GET", "POST"])
+def temporary_admin_reset():
+    if request.method == "POST":
+        token = request.form.get("token", "")
+        email = request.form.get("email", "").strip().lower()
+        new_password = request.form.get("password", "")
+
+        if token != os.environ.get("ADMIN_RESET_TOKEN"):
+            return "Invalid reset token", 403
+
+        if len(new_password) < 8:
+            return "Password must be at least 8 characters.", 400
+
+        connection = get_connection()
+
+        user = connection.execute(
+            "SELECT * FROM users WHERE email = ? AND role = 'admin'",
+            (email,)
+        ).fetchone()
+
+        if not user:
+            connection.close()
+            return "Admin account not found.", 404
+
+        connection.execute(
+            "UPDATE users SET password_hash = ? WHERE id = ?",
+            (generate_password_hash(new_password), user["id"])
+        )
+
+        connection.commit()
+        connection.close()
+
+        return "Admin password reset successfully. You can now log in."
+
+    return """
+    <form method="POST">
+        <input name="token" placeholder="Reset token" required>
+        <input name="email" type="email" placeholder="Admin email" required>
+        <input name="password" type="password" placeholder="New password" required>
+        <button type="submit">Reset Password</button>
+    </form>
 if __name__ == "__main__":
     app.run(debug=True)

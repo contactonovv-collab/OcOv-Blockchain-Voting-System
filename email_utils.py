@@ -1,26 +1,32 @@
 import os
-import smtplib
-import ssl
-from email.message import EmailMessage
+import json
+import urllib.request
+import urllib.error
 from dotenv import load_dotenv
 
 load_dotenv()
 
 MAIL_USERNAME = os.getenv("MAIL_USERNAME")
-MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 
 
 def send_otp_email(receiver_email, otp):
 
-    if not MAIL_USERNAME or not MAIL_PASSWORD:
+    if not MAIL_USERNAME or not BREVO_API_KEY:
         raise ValueError("Email credentials are not configured.")
 
-    message = EmailMessage()
-    message["Subject"] = "OcOv - Email Verification"
-    message["From"] = MAIL_USERNAME
-    message["To"] = receiver_email
-
-    message.set_content(f"""
+    payload = {
+        "sender": {
+            "name": "OcOv Team",
+            "email": MAIL_USERNAME
+        },
+        "to": [
+            {
+                "email": receiver_email
+            }
+        ],
+        "subject": "OcOv - Email Verification",
+        "textContent": f"""
 Hello,
 
 Your email verification code for OcOv (One College One Vote) is:
@@ -33,15 +39,26 @@ If you did not request this code, please ignore this email.
 
 Regards,
 OcOv Team
-    """)
+"""
+    }
 
-    context = ssl.create_default_context()
+    data = json.dumps(payload).encode("utf-8")
 
-    with smtplib.SMTP("smtp.gmail.com", 587, timeout=20) as server:
-        server.ehlo()
-        server.starttls(context=context)
-        server.ehlo()
-        server.login(MAIL_USERNAME, MAIL_PASSWORD)
-        server.send_message(message)
+    request = urllib.request.Request(
+        "https://api.brevo.com/v3/smtp/email",
+        data=data,
+        headers={
+            "api-key": BREVO_API_KEY,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        method="POST"
+    )
 
-    return True
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            return response.status in (200, 201, 202)
+
+    except urllib.error.HTTPError as error:
+        error_details = error.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Brevo email error: {error_details}") from error

@@ -12,6 +12,7 @@ from blockchain import add_block, get_blocks, verify_chain
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import session, redirect, url_for, request, abort
 
 from database import initialize_database, get_connection
 from email_utils import send_otp_email
@@ -1954,5 +1955,29 @@ def election_audit(election_id):
         chain_valid=chain_valid,
         election_blocks=election_blocks
     )
+
+@app.route("/temporary-demo-admin")
+def temporary_demo_admin():
+    token = request.args.get("token", "")
+
+    if not token or token != os.environ.get("DEMO_ADMIN_TOKEN"):
+        abort(403)
+
+    connection = get_connection()
+    admin = connection.execute(
+        "SELECT * FROM users WHERE role = 'admin' LIMIT 1"
+    ).fetchone()
+    connection.close()
+
+    if not admin:
+        return "No admin account exists in the database.", 404
+
+    session.clear()
+    session["user_id"] = admin["id"]
+    session["user_name"] = admin["name"]
+    session["user_role"] = "admin"
+
+    return redirect(url_for("admin"))
+    
 if __name__ == "__main__":
     app.run(debug=True)

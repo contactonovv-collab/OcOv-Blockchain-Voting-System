@@ -13,6 +13,8 @@ from blockchain import add_block, get_blocks, verify_chain
 from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import session, redirect, url_for, request, abort
+from werkzeug.security import generate_password_hash
+from flask import request, abort
 
 from database import initialize_database, get_connection
 from email_utils import send_otp_email
@@ -1978,6 +1980,41 @@ def temporary_demo_admin():
     session["user_role"] = "admin"
 
     return redirect(url_for("admin"))
+
+@app.route("/temporary-create-admin")
+def temporary_create_admin():
+    token = request.args.get("token", "")
+
+    if not token or token != os.environ.get("DEMO_ADMIN_TOKEN"):
+        abort(403)
+
+    email = os.environ.get("DEMO_ADMIN_EMAIL", "").strip().lower()
+    password = os.environ.get("DEMO_ADMIN_PASSWORD", "")
+
+    if not email or not password:
+        return "Admin environment variables are missing.", 400
+
+    connection = get_connection()
+
+    existing = connection.execute(
+        "SELECT id FROM users WHERE email = ?", (email,)
+    ).fetchone()
+
+    if existing:
+        connection.close()
+        return "Account already exists. No changes made.", 409
+
+    connection.execute(
+        """INSERT INTO users
+        (name, email, password_hash, role, email_verified)
+        VALUES (?, ?, ?, ?, ?)""",
+        ("Demo Admin", email, generate_password_hash(password), "admin", 1)
+    )
+
+    connection.commit()
+    connection.close()
+
+    return "Temporary admin account created. Go to the login page."
     
 if __name__ == "__main__":
     app.run(debug=True)
